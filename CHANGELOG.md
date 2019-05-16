@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.2](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.2.2%0Dv1.2.1#diff) (2019-05-16)
+
+
+### Bug Fixes
+
+* duplicate output when using dbge() ([88abd6f](https://bitbucket.org/labor-digital/labor-library-dbg/commits/88abd6f))
+
+
+
 ## [1.2.1](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.2.1%0Dv1.2.0#diff) (2019-05-16)
 
 
