@@ -1,0 +1,27 @@
+{
+	"name": "labor/dbg",
+	"description": "Simple debugging helper",
+	"type": "library",
+	"license": "Apache-2.0",
+	"version": "1.0.0",
+	"authors": [
+		{
+			"name": "LABOR.digital",
+			"email": "info@labor.digital"
+		}
+	],
+	"require": {
+		"kint-php/kint": "^3.2",
+		"0.0.0/composer-include-files": "^1.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Labor\\Dbg\\": "Classes/"
+		}
+	},
+	"extra": {
+		"include_files": [
+			"init.php"
+		]
+	}
+}
