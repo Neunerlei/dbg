@@ -43,7 +43,6 @@ if (!function_exists("Labor\\Dbg\\dbge")) {
 		if (!LABOR_DBG_ENABLED) return;
 		$args = func_get_args();
 		Kint::dump(...$args);
-		call_user_func_array([Kint::class, "dump"], func_get_args());
 		exit();
 	}
 }
