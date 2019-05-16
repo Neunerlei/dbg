@@ -48,7 +48,7 @@ Kint::$aliases[] = "Labor\\Dbg\\tracee";
 if (isset($_SERVER)) {
 	$useTextRenderer = isset($_SERVER["HTTP_ACCEPT"]) && stripos($_SERVER["HTTP_ACCEPT"], "text/html") !== 0;
 	$useTextRenderer = !$useTextRenderer && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == "xmlhttprequest";
-	Kint::$mode_default = Kint::MODE_TEXT;
+	if ($useTextRenderer) Kint::$mode_default = Kint::MODE_TEXT;
 }
 
 // Disable kint when debug is not enabled
