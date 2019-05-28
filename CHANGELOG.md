@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.1](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.3.1%0Dv1.3.0#diff) (2019-05-28)
+
+
+### Bug Fixes
+
+* ajax requests now correctly respond with the text renderer ([237611c](https://bitbucket.org/labor-digital/labor-library-dbg/commits/237611c))
+
+
+
 # [1.3.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.3.0%0Dv1.2.2#diff) (2019-05-23)
 
 
