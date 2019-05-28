@@ -68,7 +68,9 @@ Kint::$plugins = $pluginsParsed;
 // Switch to text renderer if we are inside an ajax, or other non-html requests
 if (isset($_SERVER)) {
 	$useTextRenderer = isset($_SERVER["HTTP_ACCEPT"]) && stripos($_SERVER["HTTP_ACCEPT"], "text/html") !== 0;
-	$useTextRenderer = !$useTextRenderer && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == "xmlhttprequest";
+	$useTextRenderer = $useTextRenderer ||
+		(isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) === "xmlhttprequest" ||
+			isset($_SERVER["X-Requested-With"]) && strtolower($_SERVER["X-Requested-With"]) === "xmlhttprequest");
 	if ($useTextRenderer) Kint::$mode_default = Kint::MODE_TEXT;
 }
 
