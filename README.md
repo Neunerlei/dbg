@@ -22,7 +22,7 @@ First of all, to enable the environment detection set the "environmentDetection"
 **IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite error prone (especially when you work with a dynamic IP address). If you want to use this, you have to code that feature for yourself.
 
 ## Configuration
-It is possible to define multiple options for the debugger. The configuration is performed using the Labor\Dbg\dbgConfig() function.
+It is possible to define multiple options for the debugger. The configuration is performed using the dbgConfig() function.
 Possible config options are: 
 
 - enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to false, none of the functions will do or output anything.
@@ -37,11 +37,10 @@ Possible config options are:
 - logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director. Make sure it exists and is writable by the webserver!
 
 ## Functions 
-###Labor\Dbg\dbg()
+###dbg()
 Takes any number of arguments and prints them to the screen, either formatted for html or for cli, depending on the current context.
 
 ```php
-use function Labor\Dbg\dbg;
 dbg("foo");
 ```
 
@@ -54,15 +53,14 @@ and something like this in a CLI app:
 ![Preview](ReadmeImages/dbg-cli.png)
 
 
-###Labor\Dbg\dbge()
+###dbge()
 Works exactly the same way as dbg() but kills the script exit(0) after dumping the arguments to the screen.
 
 
-###Labor\Dbg\trace()
+###trace()
 Prints the current debug backtrace to the screen, either formatted for html or for cli, depending on the current context.
 
 ```php
-use function Labor\Dbg\trace;
 trace();
 ```
 
@@ -71,15 +69,14 @@ Will render something like this in a browser:
 ![Preview](ReadmeImages/trace.png)
 
 
-###Labor\Dbg\tracee()
+###tracee()
 Again, works exactly the same as trace, but kills the script after printing it.
 
 
-###Labor\Dbg\logConsole()
+###logConsole()
 This function is mend specifically for in-browser development only. It relies on [PHP-Console](https://github.com/barbushin/php-console) and the [chrome php console extension](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef) to render the given values to the javascript console without using html script tags or similar.
 It works also when performing redirects or throwing exceptions, as the data will be transferred over a http header.
 ```php
-use function Labor\Dbg\logConsole;
 logConsole("foo");
 ```
 
@@ -88,7 +85,7 @@ This will output something like:
 ![Preview](ReadmeImages/php-console.png)
 
 
-###Labor\Dbg\logFile()
+###ogFile()
 Receives any number of arguments and will dump them into a plain log file. 
 The logfile will be located (in order of priority):
 
@@ -97,14 +94,13 @@ The logfile will be located (in order of priority):
 - /$SYS_TEMP_DIR/labor_debug_logfile.log
 
 ```php
-use function Labor\Dbg\logFile;
 logFile("foo");
 ```
 
-###Labor\Dbg\isDbgEnabled()
+###isDbgEnabled()
 This function returns true if the debug functions are currently operational (including the checks for the environment detection) and will return TRUE if so, or FALSE if not.
 
-###Labor\Dbg\dbgConfig(string $key = "", $value = NULL)
+###dbgConfig(string $key = "", $value = NULL)
 This function is used to configure the debugger with the options seen in the "Configuration" section.
 If this function is called without arguments it will return the current list of config option. If it is called with a key
 but without value it will return the current value for the given key. 
@@ -112,7 +108,6 @@ but without value it will return the current value for the given key.
 If you supply both key and value you will set the given config option.
 
 ```php
- use function Labor\Dbg\dbgConfig;
  // Enable environment detection
  dbgConfig("environmentDetection", TRUE);
  ```

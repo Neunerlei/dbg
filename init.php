@@ -19,13 +19,14 @@
 
 // Make sure kint does not register it's helpers
 use Kint\Kint;
-use Kint\Parser\ClassMethodsPlugin;
-use Kint\Parser\ColorPlugin;
-use Kint\Parser\FsPathPlugin;
-use Kint\Parser\TablePlugin;
+use Kint\Parser\BlacklistPlugin;
+use Kint\Parser\DateTimePlugin;
+use Kint\Parser\IteratorPlugin;
+use Kint\Parser\TimestampPlugin;
 use Kint\Renderer\RichRenderer;
 use Labor\Dbg\ExtendedCliRenderer;
 use Labor\Dbg\ExtendedTextRenderer;
+use Labor\Dbg\Plugins\DedupePlugin;
 
 if (!defined("KINT_SKIP_HELPERS")) define("KINT_SKIP_HELPERS", TRUE);
 if (!defined("KINT_SKIP_FACADE")) define("KINT_SKIP_FACADE", TRUE);
@@ -50,20 +51,30 @@ RichRenderer::$access_paths = FALSE;
 Kint::$renderers[Kint::MODE_TEXT] = ExtendedTextRenderer::class;
 Kint::$renderers[Kint::MODE_CLI] = ExtendedCliRenderer::class;
 Kint::$max_depth = 8;
-Kint::$aliases[] = "Labor\\Dbg\\dbg";
-Kint::$aliases[] = "Labor\\Dbg\\dbge";
-Kint::$aliases[] = "Labor\\Dbg\\consoleLog";
-Kint::$aliases[] = "Labor\\Dbg\\fileLog";
-Kint::$aliases[] = "Labor\\Dbg\\trace";
-Kint::$aliases[] = "Labor\\Dbg\\tracee";
+Kint::$aliases[] = "dbg";
+Kint::$aliases[] = "dbge";
+Kint::$aliases[] = "consoleLog";
+Kint::$aliases[] = "fileLog";
+Kint::$aliases[] = "trace";
+Kint::$aliases[] = "tracee";
 
 // Disable some plugins that really kill performance
 $pluginsParsed = [];
-foreach (Kint::$plugins as $k => $plugin) {
-	if (in_array($plugin, [TablePlugin::class, FsPathPlugin::class, ColorPlugin::class, ClassMethodsPlugin::class])) continue;
-	$pluginsParsed[] = $plugin;
-}
-Kint::$plugins = $pluginsParsed;
+Kint::$plugins = [
+	BlacklistPlugin::class,
+	DedupePlugin::class,
+	DateTimePlugin::class,
+	TimestampPlugin::class,
+	IteratorPlugin::class,
+];
+
+//var_dump(Kint::$plugins);
+//exit();
+//foreach (Kint::$plugins as $k => $plugin) {
+//	if (in_array($plugin, [TablePlugin::class, FsPathPlugin::class, ColorPlugin::class, ClassMethodsPlugin::class])) continue;
+//	$pluginsParsed[] = $plugin;
+//}
+//Kint::$plugins = $pluginsParsed;
 
 // Switch to text renderer if we are inside an ajax, or other non-html requests
 if (isset($_SERVER)) {
@@ -74,11 +85,10 @@ if (isset($_SERVER)) {
 	if ($useTextRenderer) Kint::$mode_default = Kint::MODE_TEXT;
 }
 
-// Disable kint when debug is not enabled
+// Make sure kint is enabled at all times
 Kint::$enabled_mode = TRUE;
 
 // Load bugfixes
-include __DIR__ . "/Bugfixes/KintUtils.php";
 include __DIR__ . "/Bugfixes/boxRendererFixes.php";
 
 // Load our own functions
