@@ -22,16 +22,21 @@ namespace Labor\Dbg;
 use Kint\Renderer\CliRenderer;
 use Kint\Renderer\TextRenderer;
 
-class ExtendedCliRenderer extends CliRenderer {
-	public function boxText($text, $width) {
-		if (empty($text)) $text = "MAIN";
-		return parent::boxText($text, $width);
+if (!class_exists(ExtendedCliRenderer::class)) {
+	class ExtendedCliRenderer extends CliRenderer {
+		public function boxText($text, $width) {
+			if (empty($text)) $text = "MAIN";
+			return parent::boxText($text, $width);
+		}
 	}
 }
 
-class ExtendedTextRenderer extends TextRenderer {
-	public function boxText($text, $width) {
-		if (empty($text)) $text = "MAIN";
-		return parent::boxText($text, $width);
+
+if (!class_exists(ExtendedTextRenderer::class)) {
+	class ExtendedTextRenderer extends TextRenderer {
+		public function boxText($text, $width) {
+			if (empty($text)) $text = "MAIN";
+			return parent::boxText($text, $width);
+		}
 	}
 }
