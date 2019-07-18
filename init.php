@@ -20,9 +20,15 @@
 // Make sure kint does not register it's helpers
 use Kint\Kint;
 use Kint\Parser\BlacklistPlugin;
+use Kint\Parser\ColorPlugin;
 use Kint\Parser\DateTimePlugin;
+use Kint\Parser\FsPathPlugin;
 use Kint\Parser\IteratorPlugin;
+use Kint\Parser\JsonPlugin;
+use Kint\Parser\MicrotimePlugin;
+use Kint\Parser\SerializePlugin;
 use Kint\Parser\TimestampPlugin;
+use Kint\Parser\ToStringPlugin;
 use Kint\Renderer\RichRenderer;
 use Labor\Dbg\ExtendedCliRenderer;
 use Labor\Dbg\ExtendedTextRenderer;
@@ -66,15 +72,13 @@ Kint::$plugins = [
 	DateTimePlugin::class,
 	TimestampPlugin::class,
 	IteratorPlugin::class,
+	ToStringPlugin::class,
+	FsPathPlugin::class,
+	ColorPlugin::class,
+	JsonPlugin::class,
+	MicrotimePlugin::class,
+	SerializePlugin::class,
 ];
-
-//var_dump(Kint::$plugins);
-//exit();
-//foreach (Kint::$plugins as $k => $plugin) {
-//	if (in_array($plugin, [TablePlugin::class, FsPathPlugin::class, ColorPlugin::class, ClassMethodsPlugin::class])) continue;
-//	$pluginsParsed[] = $plugin;
-//}
-//Kint::$plugins = $pluginsParsed;
 
 // Switch to text renderer if we are inside an ajax, or other non-html requests
 if (isset($_SERVER)) {
