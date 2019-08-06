@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.1](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.5.1%0Dv1.5.0#diff) (2019-08-06)
+
+
+
 # [1.5.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.5.0%0Dv1.4.0#diff) (2019-07-18)
 
 
