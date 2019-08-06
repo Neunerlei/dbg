@@ -23,6 +23,8 @@ use PhpConsole\Connector;
 if (!function_exists("dbg")) {
 	/**
 	 * Dumps the given arguments to the screen
+	 *
+	 * @param array $args
 	 */
 	function dbg(...$args) {
 		if (!isDbgEnabled()) return;
@@ -41,6 +43,8 @@ if (!function_exists("dbge")) {
 	
 	/**
 	 * Dumps the given arguments to the screen and stops the execution
+	 *
+	 * @param array $args
 	 */
 	function dbge(...$args) {
 		if (!isDbgEnabled()) return;
@@ -99,6 +103,8 @@ if (!function_exists("logConsole")) {
 	 * php console chrome extension https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef
 	 *
 	 * Set the last, given value to TRUE (with more than a single value) to also print the log to the console
+	 *
+	 * @param array $args
 	 */
 	function logConsole(...$args) {
 		if (!isDbgEnabled()) return;
@@ -125,6 +131,8 @@ if (!function_exists("logFile")) {
 	 * * LABOR_DBG_LOG_DIR/labor_debug_logfile.log if this constant contains a writable directory path
 	 * * /var/www/logs/labor_debug_logfile.log if the logs directory is writable
 	 * * /$SYS_TEMP_DIR/labor_debug_logfile.log
+	 *
+	 * @param array $args
 	 *
 	 * @return bool Returns true if the log was written, or if the debug mode is disabled. False if the file could not be
 	 *              written
@@ -208,7 +216,7 @@ if (!function_exists("dbgConfig")) {
 	function dbgConfig(string $key = "", $value = NULL) {
 		if (empty($key)) return $GLOBALS["LABOR_DBG_CONFIG"];
 		if (!array_key_exists($key, $GLOBALS["LABOR_DBG_CONFIG"]))
-			throw new \InvalidArgumentException("The given config key: " . $key . " was not found!");
+			throw new InvalidArgumentException("The given config key: " . $key . " was not found!");
 		if ($value === NULL) return $GLOBALS["LABOR_DBG_CONFIG"][$key];
 		
 		switch ($key) {
@@ -216,7 +224,7 @@ if (!function_exists("dbgConfig")) {
 			case "postHooks":
 				if (is_callable($value)) $GLOBALS["LABOR_DBG_CONFIG"][$key][] = $value;
 				else if (is_array($value)) $GLOBALS["LABOR_DBG_CONFIG"][$key] = $value;
-				else throw new \InvalidArgumentException("The given value for key: " . $key . " has to be an array or a callback!");
+				else throw new InvalidArgumentException("The given value for key: " . $key . " has to be an array or a callback!");
 				break;
 			case "enabled":
 				$GLOBALS["LABOR_DBG_CONFIG"][$key] = Kint::$enabled_mode = $value === TRUE;

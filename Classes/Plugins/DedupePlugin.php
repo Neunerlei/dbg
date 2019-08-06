@@ -25,6 +25,7 @@ use Kint\Object\BasicObject;
 use Kint\Object\InstanceObject;
 use Kint\Parser\Parser;
 use Kint\Parser\Plugin;
+use function get_class;
 
 class DedupePlugin extends Plugin {
 	/**
@@ -52,7 +53,7 @@ class DedupePlugin extends Plugin {
 			$object = new InstanceObject();
 			$object->transplant($o);
 			$object->depth = max($o->depth, Kint::$max_depth - 1);
-			$object->classname = \get_class($variable);
+			$object->classname = get_class($variable);
 			$object->hash = $id;
 			$o = $object;
 		}
