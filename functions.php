@@ -18,6 +18,8 @@
  */
 
 use Kint\Kint;
+use Kint\Object\BasicObject;
+use Kint\Utils;
 use PhpConsole\Connector;
 
 if (!function_exists("dbg")) {
@@ -66,17 +68,33 @@ if (!function_exists("trace")) {
 	/**
 	 * Dumps the debug backtrace to the screen
 	 *
-	 * @param int $offset
+	 * @param int       $offset
+	 * @param bool|null $short If set to true the arguments and objects will be ignored.
+	 *                         If set to false they will always be shown
+	 *                         If left as NULL, the args and objects will be shown except the script runs in the CLI
 	 */
-	function trace(int $offset = 0) {
+	function trace(int $offset = 0, ?bool $short = NULL) {
 		if (!isDbgEnabled()) return;
 		
 		// Call hooks
 		_dbgIntCallHooks("preHooks", __FUNCTION__, func_get_args());
 		
-		$trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+		$trace = debug_backtrace($short ? DEBUG_BACKTRACE_IGNORE_ARGS : DEBUG_BACKTRACE_PROVIDE_OBJECT);
 		$trace = array_slice($trace, $offset);
-		Kint::dump($trace);
+		
+		// Do some stuff to help kint out a bit
+		$trimmed_trace = [];
+		foreach ($trace as $frame) {
+			if (Utils::traceFrameIsListed($frame, Kint::$aliases)) $trimmed_trace = [];
+			$trimmed_trace[] = $frame;
+		}
+		
+		// Create the dump
+		$output = Kint::createFromStatics(Kint::getStatics())->dumpAll(
+			[$trimmed_trace],
+			[BasicObject::blank('trace()', 'debug_backtrace(true)')]
+		);
+		echo $output;
 		
 		// Call hooks
 		_dbgIntCallHooks("postHooks", __FUNCTION__, func_get_args());
@@ -88,11 +106,14 @@ if (!function_exists("tracee")) {
 	/**
 	 * Dumps the debug backtrace to the screen and kills the script
 	 *
-	 * @param int $offset
+	 * @param int       $offset
+	 * @param bool|null $short If set to true the arguments and objects will be ignored.
+	 *                         If set to false they will always be shown
+	 *                         If left as NULL, the args and objects will be shown except the script runs in the CLI
 	 */
-	function tracee(int $offset = 0) {
+	function tracee(int $offset = 0, ?bool $short = NULL) {
 		if (!isDbgEnabled()) return;
-		trace($offset + 1);
+		trace($offset + 1, $short);
 		exit();
 	}
 }
