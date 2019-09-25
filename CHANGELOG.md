@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.6.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.6.0%0Dv1.5.1#diff) (2019-09-25)
+
+
+### Features
+
+* add additional $short option for backtrace generation ([f4db405](https://bitbucket.org/labor-digital/labor-library-dbg/commits/f4db405))
+
+
+
 ## [1.5.1](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.5.1%0Dv1.5.0#diff) (2019-08-06)
 
 
