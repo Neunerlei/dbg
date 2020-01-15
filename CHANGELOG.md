@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.7.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.7.0%0Dv1.6.0#diff) (2020-01-15)
+
+
+### Features
+
+* **trace:** add more options to the trace output ([1119adc](https://bitbucket.org/labor-digital/labor-library-dbg/commits/1119adc))
+
+
+
 # [1.6.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.6.0%0Dv1.5.1#diff) (2019-09-25)
 
 

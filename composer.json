@@ -3,7 +3,7 @@
 	"description": "Simple debugging helper",
 	"type": "library",
 	"license": "Apache-2.0",
-	"version": "1.6.0",
+	"version": "1.7.0",
 	"authors": [
 		{
 			"name": "LABOR.digital",
