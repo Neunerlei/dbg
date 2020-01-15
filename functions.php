@@ -68,33 +68,56 @@ if (!function_exists("trace")) {
 	/**
 	 * Dumps the debug backtrace to the screen
 	 *
-	 * @param int       $offset
-	 * @param bool|null $short If set to true the arguments and objects will be ignored.
-	 *                         If set to false they will always be shown
+	 * @param array $options   Options for the trace generation
+	 *                         - offset int (0): The offset from the top of the trace that should be ignored
+	 *                         - length int: By default all steps are show, this option marks the maximum
+	 *                         number of steps to be shown.
+	 *                         - withArguments bool|null (NULL): If set to FALSE the arguments and objects will be ignored.
+	 *                         If set to TRUE they will always be shown
 	 *                         If left as NULL, the args and objects will be shown except the script runs in the CLI
 	 */
-	function trace(int $offset = 0, ?bool $short = NULL) {
+	function trace(array $options = []) {
 		if (!isDbgEnabled()) return;
+		
+		// Prepare options
+		$withArguments = $options["withArguments"];
+		if (!is_bool($withArguments)) $withArguments = is_null($withArguments) ? php_sapi_name() !== "cli" : TRUE;
+		$offset = (int)$options["offset"];
+		$length = (int)$options["length"];
 		
 		// Call hooks
 		_dbgIntCallHooks("preHooks", __FUNCTION__, func_get_args());
-		
-		$trace = debug_backtrace($short ? DEBUG_BACKTRACE_IGNORE_ARGS : DEBUG_BACKTRACE_PROVIDE_OBJECT);
+		$trace = debug_backtrace($withArguments ? NULL : DEBUG_BACKTRACE_IGNORE_ARGS);
 		$trace = array_slice($trace, $offset);
 		
 		// Do some stuff to help kint out a bit
 		$trimmed_trace = [];
+		$stepsToShow = empty($length) ? count($trace) : $length;
 		foreach ($trace as $frame) {
 			if (Utils::traceFrameIsListed($frame, Kint::$aliases)) $trimmed_trace = [];
+			if (count($trimmed_trace) >= $stepsToShow) {
+				$trimmed_trace[] = "Hiding " . (abs($stepsToShow - count($trace))) . " additional steps!";
+				break;
+			}
+			if (isset($frame["args"])) {
+				foreach ($frame["args"] as $k => $arg) {
+					if (is_object($arg)) {
+						$frame["args"][$k] = get_class($arg);
+					}
+				}
+			}
 			$trimmed_trace[] = $frame;
 		}
 		
 		// Create the dump
+		$depthBackup = Kint::$max_depth;
+		Kint::$max_depth = 2;
 		$output = Kint::createFromStatics(Kint::getStatics())->dumpAll(
 			[$trimmed_trace],
 			[BasicObject::blank('trace()', 'debug_backtrace(true)')]
 		);
 		echo $output;
+		Kint::$max_depth = $depthBackup;
 		
 		// Call hooks
 		_dbgIntCallHooks("postHooks", __FUNCTION__, func_get_args());
@@ -106,14 +129,18 @@ if (!function_exists("tracee")) {
 	/**
 	 * Dumps the debug backtrace to the screen and kills the script
 	 *
-	 * @param int       $offset
-	 * @param bool|null $short If set to true the arguments and objects will be ignored.
+	 * @param array $options   Options for the trace generation
+	 *                         - offset int (0): The offset from the top of the trace that should be ignored
+	 *                         - length int: By default all steps are show, this option marks the maximum
+	 *                         number of steps to be shown.
+	 *                         - withArguments bool|null (NULL): If set to true the arguments and objects will be ignored.
 	 *                         If set to false they will always be shown
 	 *                         If left as NULL, the args and objects will be shown except the script runs in the CLI
 	 */
-	function tracee(int $offset = 0, ?bool $short = NULL) {
+	function tracee(array $options = []) {
 		if (!isDbgEnabled()) return;
-		trace($offset + 1, $short);
+		$options["offset"] = (int)$options["offset"] + 1;
+		trace($options);
 		exit();
 	}
 }
