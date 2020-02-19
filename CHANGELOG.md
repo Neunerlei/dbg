@@ -1,6 +1,13 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.8.0](https://github.com/labor-digital/dbg/compare/v1.7.0...v1.8.0) (2020-02-19)
+
+
+### Features
+
+* prepare for publication on github and packagist ([016abee](https://github.com/labor-digital/dbg/commit/016abee6f93bd86409fb4f59f6932a5f71ae1f0f))
 
 # [1.7.0](https://bitbucket.org/labor-digital/labor-library-dbg/branches/compare/v1.7.0%0Dv1.6.0#diff) (2020-01-15)
 
