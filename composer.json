@@ -1,17 +1,29 @@
 {
-	"name": "labor/dbg",
-	"description": "Simple debugging helper",
+	"name": "labor-digital/dbg",
+	"description": "PHP debugging suitcase for your daily work",
 	"type": "library",
 	"license": "Apache-2.0",
 	"version": "1.7.0",
 	"authors": [
 		{
 			"name": "LABOR.digital",
-			"email": "info@labor.digital"
+			"email": "info@labor.tools",
+			"homepage": "https://www.labor.digital",
+			"role": "Company"
+		},
+		{
+			"name": "Martin Neundorfer",
+			"email": "m.neundorfer@labor.digital",
+			"homepage": "https://www.neunerlei.eu",
+			"role": "Developer"
 		}
 	],
+	"support": {
+		"issues": "https://github.com/labor-digital/dbg/issues",
+		"source": "https://github.com/labor-digital/dbg"
+	},
 	"require": {
-		"kint-php/kint": "^3.2",
+		"kint-php/kint": "^3.3",
 		"0.0.0/composer-include-files": "^1.5",
 		"php-console/php-console": "^3.1"
 	},

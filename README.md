@@ -1,8 +1,6 @@
 # LABOR Debug Helpers
 This library is basically just a wrapper around [Kint](https://github.com/kint-php/kint) and [PHP-Console](https://github.com/barbushin/php-console) combining them both into a powerful debugging tool.
 
-The library contains the following functions:
-
 ## Installation
 Install this package using our [satis repository](https://satis.labor.tools/?#labor/dbg)
 
@@ -85,7 +83,7 @@ This will output something like:
 ![Preview](ReadmeImages/php-console.png)
 
 
-###ogFile()
+###logFile()
 Receives any number of arguments and will dump them into a plain log file. 
 The logfile will be located (in order of priority):
 
