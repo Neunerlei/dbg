@@ -2,9 +2,11 @@
 This library is basically just a wrapper around [Kint](https://github.com/kint-php/kint) and [PHP-Console](https://github.com/barbushin/php-console) combining them both into a powerful debugging tool.
 
 ## Installation
-Install this package using our [satis repository](https://satis.labor.tools/?#labor/dbg)
+Install this package using composer:
 
-In your cli `composer require labor\dbg`
+```
+composer require labor-digital/dbg
+```
 
 ## Environment detection
 It is not recommended to use this library in production. However if you have considered the risks and know what to do, this library tries to help you running it in production as securely as possible.
@@ -35,7 +37,7 @@ Possible config options are:
 - logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director. Make sure it exists and is writable by the webserver!
 
 ## Functions 
-###dbg()
+### dbg()
 Takes any number of arguments and prints them to the screen, either formatted for html or for cli, depending on the current context.
 
 ```php
@@ -51,11 +53,11 @@ and something like this in a CLI app:
 ![Preview](ReadmeImages/dbg-cli.png)
 
 
-###dbge()
+### dbge()
 Works exactly the same way as dbg() but kills the script exit(0) after dumping the arguments to the screen.
 
 
-###trace()
+### trace()
 Prints the current debug backtrace to the screen, either formatted for html or for cli, depending on the current context.
 
 ```php
@@ -67,11 +69,11 @@ Will render something like this in a browser:
 ![Preview](ReadmeImages/trace.png)
 
 
-###tracee()
+### tracee()
 Again, works exactly the same as trace, but kills the script after printing it.
 
 
-###logConsole()
+### logConsole()
 This function is mend specifically for in-browser development only. It relies on [PHP-Console](https://github.com/barbushin/php-console) and the [chrome php console extension](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef) to render the given values to the javascript console without using html script tags or similar.
 It works also when performing redirects or throwing exceptions, as the data will be transferred over a http header.
 ```php
@@ -83,7 +85,7 @@ This will output something like:
 ![Preview](ReadmeImages/php-console.png)
 
 
-###logFile()
+### logFile()
 Receives any number of arguments and will dump them into a plain log file. 
 The logfile will be located (in order of priority):
 
@@ -95,10 +97,10 @@ The logfile will be located (in order of priority):
 logFile("foo");
 ```
 
-###isDbgEnabled()
+### isDbgEnabled()
 This function returns true if the debug functions are currently operational (including the checks for the environment detection) and will return TRUE if so, or FALSE if not.
 
-###dbgConfig(string $key = "", $value = NULL)
+### dbgConfig(string $key = "", $value = NULL)
 This function is used to configure the debugger with the options seen in the "Configuration" section.
 If this function is called without arguments it will return the current list of config option. If it is called with a key
 but without value it will return the current value for the given key. 
