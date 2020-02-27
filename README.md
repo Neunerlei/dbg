@@ -1,4 +1,4 @@
-# LABOR Debug Helpers
+# DBG - Debug Helpers
 This library is basically just a wrapper around [Kint](https://github.com/kint-php/kint) and [PHP-Console](https://github.com/barbushin/php-console) combining them both into a powerful debugging tool.
 
 ## Installation
