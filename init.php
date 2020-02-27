@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 LABOR.digital
+ * Copyright 2020 Martin Neundorfer (Neunerlei)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Last modified: 2019.05.16 at 12:45
+ * Last modified: 2020.02.27 at 11:49
  */
 
 // Make sure kint does not register it's helpers
@@ -30,15 +30,15 @@ use Kint\Parser\SerializePlugin;
 use Kint\Parser\TimestampPlugin;
 use Kint\Parser\ToStringPlugin;
 use Kint\Renderer\RichRenderer;
-use Labor\Dbg\ExtendedCliRenderer;
-use Labor\Dbg\ExtendedTextRenderer;
-use Labor\Dbg\Plugins\DedupePlugin;
+use Neunerlei\Dbg\ExtendedCliRenderer;
+use Neunerlei\Dbg\ExtendedTextRenderer;
+use Neunerlei\Dbg\Plugins\DedupePlugin;
 
 if (!defined("KINT_SKIP_HELPERS")) define("KINT_SKIP_HELPERS", TRUE);
 if (!defined("KINT_SKIP_FACADE")) define("KINT_SKIP_FACADE", TRUE);
 
 // Prepare configuration
-$GLOBALS["LABOR_DBG_CONFIG"] = [
+$GLOBALS["_DBG_CONFIG"] = [
 	"enabled"              => TRUE,
 	"environmentDetection" => FALSE,
 	"envVarKey"            => "PROJECT_ENV",

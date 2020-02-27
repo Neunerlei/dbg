@@ -5,7 +5,7 @@ This library is basically just a wrapper around [Kint](https://github.com/kint-p
 Install this package using composer:
 
 ```
-composer require labor-digital/dbg
+composer require neunerlei/dbg
 ```
 
 ## Environment detection
@@ -89,8 +89,9 @@ This will output something like:
 Receives any number of arguments and will dump them into a plain log file. 
 The logfile will be located (in order of priority):
 
-- LABOR_DBG_LOG_DIR/labor_debug_logfile.log if this constant contains a writable directory path
-- /var/www/logs/labor_debug_logfile.log if the logs directory is writable
+- $_ENV["_DBG_LOG_DIR"]/dbg_debug_logfile.log if this environment variable contains a writable directory path
+- dbgConfig("logDir") /dbg_debug_logfile.log if the environment variable is empty and the directory is writable
+- /var/www/logs/dbg_debug_logfile.log if the logs directory is writable
 - /$SYS_TEMP_DIR/labor_debug_logfile.log
 
 ```php

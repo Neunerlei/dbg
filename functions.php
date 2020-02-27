@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 LABOR.digital
+ * Copyright 2020 Martin Neundorfer (Neunerlei)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Last modified: 2019.05.16 at 14:08
+ * Last modified: 2020.02.27 at 11:52
  */
 
 use Kint\Kint;
@@ -176,9 +176,10 @@ if (!function_exists("logFile")) {
 	 * Dumps the given arguments into a logfile.
 	 *
 	 * The logfile will be created either at:
-	 * * LABOR_DBG_LOG_DIR/labor_debug_logfile.log if this constant contains a writable directory path
-	 * * /var/www/logs/labor_debug_logfile.log if the logs directory is writable
-	 * * /$SYS_TEMP_DIR/labor_debug_logfile.log
+	 * * $_ENV["_DBG_LOG_DIR"]/dbg_debug_logfile.log if this environment variable contains a writable directory path
+	 * * dbgConfig("logDir") /dbg_debug_logfile.log if the environment variable is empty and the directory is writable
+	 * * /var/www/logs/dbg_debug_logfile.log if the logs directory is writable
+	 * * /$SYS_TEMP_DIR/dbg_debug_logfile.log
 	 *
 	 * @param array $args
 	 *
@@ -192,13 +193,16 @@ if (!function_exists("logFile")) {
 		_dbgIntCallHooks("preHooks", __FUNCTION__, $args);
 		
 		// Try to find logfile
-		$logDir = dbgConfig("logDir");
-		if (is_string($logDir) && (is_writable(rtrim($logDir, "/\\") . "/labor_debug_logfile.log") || is_writable($logDir)))
-			$logFile = rtrim($logDir, "/\\") . "/labor_debug_logfile.log";
-		else if (is_writable("/var/www/logs/labor_debug_logfile.log") || !file_exists("/var/www/logs/labor_debug_logfile.log") && is_writable("/var/www/logs/"))
-			$logFile = "/var/www/logs/labor_debug_logfile.log";
-		else if (is_writable(sys_get_temp_dir() . "/labor_debug_logfile.log") || !file_exists(sys_get_temp_dir() . "/labor_debug_logfile.log") && is_writable("/var/www/logs/"))
-			$logFile = sys_get_temp_dir() . "/labor_debug_logfile.log";
+		$ds = DIRECTORY_SEPARATOR;
+		$logDir = getenv("_DBG_LOG_DIR");
+		if (empty($logDir)) $logDir = dbgConfig("logDir");
+		$logfileName = "dbg_debug_logfile.log";
+		if (is_string($logDir) && (is_writable(rtrim($logDir, "/\\") . $ds . $logfileName) || is_writable($logDir)))
+			$logFile = rtrim($logDir, "/\\") . $ds . $logfileName;
+		else if (is_writable("/var/www/logs/" . $logfileName) || !file_exists("/var/www/logs/" . $logfileName) && is_writable("/var/www/logs/"))
+			$logFile = "/var/www/logs/" . $logfileName;
+		else if (is_writable(sys_get_temp_dir() . $ds . $logfileName) || !file_exists(sys_get_temp_dir() . $ds . $logfileName) && is_writable("/var/www/logs/"))
+			$logFile = sys_get_temp_dir() . "/" . $logfileName;
 		else
 			return FALSE;
 		
@@ -262,28 +266,28 @@ if (!function_exists("dbgConfig")) {
 	 * @return bool|mixed
 	 */
 	function dbgConfig(string $key = "", $value = NULL) {
-		if (empty($key)) return $GLOBALS["LABOR_DBG_CONFIG"];
-		if (!array_key_exists($key, $GLOBALS["LABOR_DBG_CONFIG"]))
+		if (empty($key)) return $GLOBALS["_DBG_CONFIG"];
+		if (!array_key_exists($key, $GLOBALS["_DBG_CONFIG"]))
 			throw new InvalidArgumentException("The given config key: " . $key . " was not found!");
-		if ($value === NULL) return $GLOBALS["LABOR_DBG_CONFIG"][$key];
+		if ($value === NULL) return $GLOBALS["_DBG_CONFIG"][$key];
 		
 		switch ($key) {
 			case "preHooks":
 			case "postHooks":
-				if (is_callable($value)) $GLOBALS["LABOR_DBG_CONFIG"][$key][] = $value;
-				else if (is_array($value)) $GLOBALS["LABOR_DBG_CONFIG"][$key] = $value;
+				if (is_callable($value)) $GLOBALS["_DBG_CONFIG"][$key][] = $value;
+				else if (is_array($value)) $GLOBALS["_DBG_CONFIG"][$key] = $value;
 				else throw new InvalidArgumentException("The given value for key: " . $key . " has to be an array or a callback!");
 				break;
 			case "enabled":
-				$GLOBALS["LABOR_DBG_CONFIG"][$key] = Kint::$enabled_mode = $value === TRUE;
+				$GLOBALS["_DBG_CONFIG"][$key] = Kint::$enabled_mode = $value === TRUE;
 				break;
 			default:
-				$GLOBALS["LABOR_DBG_CONFIG"][$key] = $value;
+				$GLOBALS["_DBG_CONFIG"][$key] = $value;
 		}
 		return TRUE;
 	}
 	
-	if (!defined("LABOR_DBG_CONFIG_LOADED")) define("LABOR_DBG_CONFIG_LOADED", TRUE);
+	if (!defined("_DBG_CONFIG_LOADED")) define("_DBG_CONFIG_LOADED", TRUE);
 }
 
 if (!function_exists("isDbgEnabled")) {
@@ -292,7 +296,7 @@ if (!function_exists("isDbgEnabled")) {
 	 * @return bool
 	 */
 	function isDbgEnabled(): bool {
-		$conf = $GLOBALS["LABOR_DBG_CONFIG"];
+		$conf = $GLOBALS["_DBG_CONFIG"];
 		return
 			// Check if the debugging is enabled
 			$conf["enabled"] === TRUE && (

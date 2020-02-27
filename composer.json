@@ -1,5 +1,5 @@
 {
-	"name": "labor-digital/dbg",
+	"name": "neunerlei/dbg",
 	"description": "PHP debugging suitcase for your daily work",
 	"type": "library",
 	"license": "Apache-2.0",
@@ -13,14 +13,14 @@
 		},
 		{
 			"name": "Martin Neundorfer",
-			"email": "m.neundorfer@labor.digital",
+			"email": "code@neunerlei.eu",
 			"homepage": "https://www.neunerlei.eu",
 			"role": "Developer"
 		}
 	],
 	"support": {
-		"issues": "https://github.com/labor-digital/dbg/issues",
-		"source": "https://github.com/labor-digital/dbg"
+		"issues": "https://github.com/neunerlei/dbg/issues",
+		"source": "https://github.com/neunerlei/dbg"
 	},
 	"require": {
 		"kint-php/kint": "^3.3",
@@ -29,7 +29,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Labor\\Dbg\\": "Classes/"
+			"Neunerlei\\Dbg\\": "Classes/"
 		}
 	},
 	"extra": {
