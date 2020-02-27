@@ -112,3 +112,10 @@ If you supply both key and value you will set the given config option.
  // Enable environment detection
  dbgConfig("environmentDetection", TRUE);
  ```
+
+## Postcardware
+You're free to use this package, but if it makes it to your production environment I highly appreciate you sending me a postcard from your hometown, mentioning which of our package(s) you are using.
+
+You can find my address [here](https://www.neunerlei.eu/). 
+
+Thank you :D 
