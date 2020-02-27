@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/Neunerlei/dbg/compare/v1.8.1...v1.9.0) (2020-02-27)
+
+
+### Features
+
+* update vendor name ([fdfa5fc](https://github.com/Neunerlei/dbg/commit/fdfa5fcf9659f2436a9b10c569b658c857fffc79))
+
 ### [1.8.1](https://github.com/neunerlei/dbg/compare/v1.8.0...v1.8.1) (2020-02-19)
 
 ## [1.8.0](https://github.com/neunerlei/dbg/compare/v1.7.0...v1.8.0) (2020-02-19)
