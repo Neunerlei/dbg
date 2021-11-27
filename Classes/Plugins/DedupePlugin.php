@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2020 Martin Neundorfer (Neunerlei)
  *
@@ -27,38 +29,46 @@ use Kint\Parser\Parser;
 use Kint\Parser\Plugin;
 use function get_class;
 
-class DedupePlugin extends Plugin {
-	/**
-	 * @var Parser
-	 */
-	protected $parser;
-	
-	protected $knownObjects = [];
-	
-	public function getTypes() {
-		return ["object"];
-	}
-	
-	public function getTriggers() {
-		return Parser::TRIGGER_BEGIN;
-	}
-	
-	public function parse(&$variable, BasicObject &$o, $trigger) {
-		// Ignore if this is a class without namespace -> probably built in
-		if (stripos(get_class($variable), "\\") === FALSE) return;
-		
-		// Get the object id
-		$id = spl_object_hash($variable);
-		if (isset($this->knownObjects[$id])) {
-			$object = new InstanceObject();
-			$object->transplant($o);
-			$object->depth = max($o->depth, Kint::$max_depth - 1);
-			$object->classname = get_class($variable);
-			$object->hash = $id;
-			$o = $object;
-		}
-		
-		// Mark as known
-		$this->knownObjects[$id] = TRUE;
-	}
+class DedupePlugin extends Plugin
+{
+    /**
+     * @var Parser
+     */
+    protected $parser;
+    
+    protected $knownObjects = [];
+    
+    public function getTypes()
+    {
+        $this->knownObjects = [];
+        
+        return ['object'];
+    }
+    
+    public function getTriggers()
+    {
+        return Parser::TRIGGER_BEGIN;
+    }
+    
+    public function parse(&$variable, BasicObject &$o, $trigger)
+    {
+        // Ignore if this is a class without namespace -> probably built in
+        if (strpos(get_class($variable), "\\") === false) {
+            return;
+        }
+        
+        // Get the object id
+        $id = spl_object_hash($variable);
+        if (isset($this->knownObjects[$id])) {
+            $object = new InstanceObject();
+            $object->transplant($o);
+            $object->depth = max($o->depth, Kint::$max_depth - 1);
+            $object->classname = get_class($variable);
+            $object->hash = $id;
+            $o = $object;
+        }
+        
+        // Mark as known
+        $this->knownObjects[$id] = true;
+    }
 }

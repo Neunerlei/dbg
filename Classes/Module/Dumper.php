@@ -1,8 +1,6 @@
 <?php
-declare(strict_types=1);
-
-/**
- * Copyright 2020 Martin Neundorfer (Neunerlei)
+/*
+ * Copyright 2021 LABOR.digital
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +14,32 @@ declare(strict_types=1);
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Last modified: 2020.02.27 at 11:49
+ * Last modified: 2021.11.27 at 16:03
  */
 
+declare(strict_types=1);
+
+
+namespace Neunerlei\Dbg\Module;
+
+
+use Kint\Kint;
 use Neunerlei\Dbg\Dbg;
 
-if (! defined('KINT_SKIP_HELPERS')) {
-    define('KINT_SKIP_HELPERS', true);
+class Dumper
+{
+    public static function dump(string $functionName, array $args, bool $exit): void
+    {
+        if (! Dbg::isEnabled()) {
+            return;
+        }
+        
+        Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
+        Kint::dump(...$args);
+        Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
+        
+        if ($exit) {
+            exit();
+        }
+    }
 }
-if (! defined('KINT_SKIP_FACADE')) {
-    define('KINT_SKIP_FACADE', true);
-}
-
-Dbg::init();
-include __DIR__ . '/functions.php';

@@ -1,8 +1,6 @@
 <?php
-declare(strict_types=1);
-
-/**
- * Copyright 2020 Martin Neundorfer (Neunerlei)
+/*
+ * Copyright 2021 LABOR.digital
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +14,26 @@ declare(strict_types=1);
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Last modified: 2020.02.27 at 11:49
+ * Last modified: 2021.11.27 at 19:43
  */
 
-use Neunerlei\Dbg\Dbg;
+declare(strict_types=1);
 
-if (! defined('KINT_SKIP_HELPERS')) {
-    define('KINT_SKIP_HELPERS', true);
-}
-if (! defined('KINT_SKIP_FACADE')) {
-    define('KINT_SKIP_FACADE', true);
-}
 
-Dbg::init();
-include __DIR__ . '/functions.php';
+namespace Neunerlei\Dbg\Renderer;
+
+
+use Kint\Renderer\CliRenderer;
+
+class ExtendedCliRenderer extends CliRenderer
+{
+    
+    public function boxText($text, $width)
+    {
+        if (empty($text)) {
+            return '';
+        }
+        
+        return parent::boxText($text, $width);
+    }
+}
