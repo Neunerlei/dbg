@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/Neunerlei/dbg/compare/v1.10.0...v1.10.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* fix an issue where callable hooks were not executed ([580c0b7](https://github.com/Neunerlei/dbg/commit/580c0b786ef64e48d0913dc039c23ed1c81b2a50))
+
 ## [1.10.0](https://github.com/Neunerlei/dbg/compare/v1.9.2...v1.10.0) (2021-11-27)
 
 
