@@ -243,7 +243,7 @@ class Dbg
         }
         
         foreach ($conf as $callback) {
-            if (! is_callable($callback)) {
+            if (is_callable($callback)) {
                 $callback($type, $functionName, $args);
             }
         }
