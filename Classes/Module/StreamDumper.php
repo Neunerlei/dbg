@@ -31,13 +31,6 @@ class StreamDumper
     use DumperUtilTrait;
     
     /**
-     * Public "API" to define the location of the stream to dump to
-     *
-     * @var string
-     */
-    public static $streamPath = 'php://stdout';
-    
-    /**
      * Contains the stream to dump to
      *
      * @var resource|null
@@ -67,7 +60,7 @@ class StreamDumper
         
         Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
         
-        static::openStream();
+        static::openStream(static::resolveStreamPath());
         
         if (fwrite(static::$stream, static::buildLogLine($args)) === false) {
             return false;
@@ -78,12 +71,40 @@ class StreamDumper
         return true;
     }
     
+    /**
+     * Resolves the configured log stream path and returns it
+     *
+     * @return string
+     */
+    protected static function resolveStreamPath(): string
+    {
+        $logStream = getenv('_DBG_LOG_STREAM');
+        if (empty($logStream)) {
+            $logStream = Dbg::config('logStream');
+        }
+        
+        if (is_string($logStream)) {
+            return $logStream;
+        }
+        
+        return 'php://stdout';
+    }
+    
+    /**
+     * Generates the log line out of the given arguments
+     *
+     * @param   array  $args
+     *
+     * @return string
+     */
     protected static function buildLogLine(array $args): string
     {
-        return static::getTimestamp() .
-               ' ' . static::stringifyArgs($args) .
-               ' | ' . static::getCallee($args) .
-               ' | ' . static::getRequestSource();
+        return preg_replace('/\s*[\\n,\\r]\s*/', ' [NL] ',
+            static::getTimestamp() .
+            ' ' . static::stringifyArgs($args) .
+            ' | ' . static::getCallee($args) .
+            ' | ' . static::getRequestSource()
+        );
     }
     
     /**
@@ -99,7 +120,7 @@ class StreamDumper
         
         foreach ($args as $arg) {
             if (is_string($arg) || is_numeric($arg)) {
-                $out[] = $arg;
+                $out[] = '"' . $arg . '"';
                 continue;
             }
             
@@ -120,22 +141,24 @@ class StreamDumper
      * Opens the stream if not already opened
      * Automatically detects if the streamPath has been changed and reopens the new stream.
      *
+     * @param   string  $streamPath
+     *
      * @return void
      */
-    protected static function openStream(): void
+    protected static function openStream(string $streamPath): void
     {
         if (isset(static::$stream)) {
-            if (static::$streamPath === static::$openStreamPath) {
+            if ($streamPath === static::$openStreamPath) {
                 return;
             }
             
             static::closeStream();
         }
         
-        static::createDir();
+        static::createDir($streamPath);
         static::$errorMessage = null;
         set_error_handler([static::class, 'customErrorHandler']);
-        static::$stream = fopen(static::$streamPath, 'ab');
+        static::$stream = fopen($streamPath, 'ab');
         restore_error_handler();
         
         if (! is_resource(static::$stream)) {
@@ -143,8 +166,7 @@ class StreamDumper
             
             throw new UnexpectedValueException(
                 sprintf(
-                    'The stream or file "%s" could not be opened in append mode: ' .
-                    static::$errorMessage, static::$streamPath));
+                    'The stream or file "%s" could not be opened in append mode: ' . static::$errorMessage, $streamPath));
         }
     }
     
@@ -184,10 +206,12 @@ class StreamDumper
     
     /**
      * Makes sure that the stream directory exists and is writable
+     *
+     * @param   string  $streamPath
      */
-    protected static function createDir(): void
+    protected static function createDir(string $streamPath): void
     {
-        $dir = static::getDirFromStream(static::$streamPath);
+        $dir = static::getDirFromStream($streamPath);
         if (null !== $dir && ! is_dir($dir)) {
             static::$errorMessage = null;
             set_error_handler([static::class, 'customErrorHandler']);

@@ -69,6 +69,7 @@ class Dbg
             'postHooks' => [],
             'consolePassword' => null,
             'logDir' => null,
+            'logStream' => null,
         ];
     
     /**
