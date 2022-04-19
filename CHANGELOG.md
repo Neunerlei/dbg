@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/Neunerlei/dbg/compare/v1.10.1...v1.11.0) (2022-04-19)
+
+
+### Features
+
+* **StreamDumper:** streamline config + output formatting ([407d53f](https://github.com/Neunerlei/dbg/commit/407d53fb4fd2c21f1ff0bdf28a2bbe7c19f67f5f))
+* implement stream dumper and logStream ([3c8547b](https://github.com/Neunerlei/dbg/commit/3c8547bacc2e4dd34807b41da9cf26d08dd675a0))
+
+
+### Bug Fixes
+
+* **Dumper:** fix rendering issue in nested dbg(e) calls ([8f790b6](https://github.com/Neunerlei/dbg/commit/8f790b639fe72608f223abe6931ef484be32f229))
+
 ### [1.10.1](https://github.com/Neunerlei/dbg/compare/v1.10.0...v1.10.1) (2021-11-30)
 
 
