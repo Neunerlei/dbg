@@ -24,19 +24,39 @@ namespace Neunerlei\Dbg\Module;
 
 
 use Kint\Kint;
+use Kint\Renderer\RichRenderer;
 use Neunerlei\Dbg\Dbg;
 
 class Dumper
 {
+    protected static $hasDumpedOnce = false;
+    protected static $isDumping = false;
+    
     public static function dump(string $functionName, array $args, bool $exit): void
     {
         if (! Dbg::isEnabled()) {
             return;
         }
         
-        Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
-        Kint::dump(...$args);
-        Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
+        if (static::$isDumping && ! static::$hasDumpedOnce) {
+            $oldPreRenderState = RichRenderer::$always_pre_render;
+            RichRenderer::$always_pre_render = true;
+        }
+        
+        static::$isDumping = true;
+        
+        try {
+            Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
+            Kint::dump(...$args);
+            Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
+        } finally {
+            static::$isDumping = false;
+            static::$hasDumpedOnce = true;
+            
+            if (isset($oldPreRenderState)) {
+                RichRenderer::$always_pre_render = $oldPreRenderState;
+            }
+        }
         
         if ($exit) {
             exit();
