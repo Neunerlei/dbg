@@ -23,6 +23,7 @@ use Neunerlei\Dbg\Dbg;
 use Neunerlei\Dbg\Module\Dumper;
 use Neunerlei\Dbg\Module\FileDumper;
 use Neunerlei\Dbg\Module\PhpConsole as PhpConsoleModule;
+use Neunerlei\Dbg\Module\StreamDumper;
 use Neunerlei\Dbg\Module\Tracer;
 
 if (! function_exists('dbg')) {
@@ -118,6 +119,21 @@ if (! function_exists('logFile')) {
     function logFile(...$args): bool
     {
         return FileDumper::dump(__FUNCTION__, $args);
+    }
+}
+
+if (! function_exists('logStream')) {
+    /**
+     * Dumps the given arguments into a stream (by default the stdout)
+     *
+     * @param   array  $args
+     *
+     * @return bool Returns true if the log was written, or if the debug mode is disabled.
+     * False if the stream could not be written
+     */
+    function logStream(...$args): bool
+    {
+        return StreamDumper::dump(__FUNCTION__, $args);
     }
 }
 

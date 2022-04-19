@@ -94,8 +94,9 @@ class Dbg
         
         Kint::$aliases[] = 'dbg';
         Kint::$aliases[] = 'dbge';
-        Kint::$aliases[] = 'logConsole';
-        Kint::$aliases[] = 'logFile';
+        Kint::$aliases[] = 'logconsole';
+        Kint::$aliases[] = 'logfile';
+        Kint::$aliases[] = 'logstream';
         Kint::$aliases[] = 'trace';
         Kint::$aliases[] = 'tracee';
         

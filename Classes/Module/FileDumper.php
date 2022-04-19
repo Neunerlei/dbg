@@ -28,6 +28,8 @@ use Neunerlei\Dbg\Dbg;
 
 class FileDumper
 {
+    use DumperUtilTrait;
+    
     public static function dump(string $functionName, array $args): bool
     {
         if (! Dbg::isEnabled()) {
@@ -51,12 +53,7 @@ class FileDumper
         Kint::$return = $_return;
         Kint::$mode_default = $_modeDefault;
         
-        $content .= '[' . (new \DateTime())->format('Y-m-d H:i:s') . '] ';
-        if (isset($_SERVER) && isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI'])) {
-            $content .= 'URL: ' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . PHP_EOL;
-        } elseif (PHP_SAPI === 'cli') {
-            $content .= 'Called from CLI' . PHP_EOL;
-        }
+        $content .= static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
         
         if (is_file($logFileName) && filesize($logFileName) > 0) {
             $content = PHP_EOL . PHP_EOL . PHP_EOL . $content;
