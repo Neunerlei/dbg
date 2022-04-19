@@ -99,7 +99,7 @@ class StreamDumper
      */
     protected static function buildLogLine(array $args): string
     {
-        return preg_replace('/\s*[\\n,\\r]\s*/', ' [NL] ',
+        return preg_replace('/\\s*[\\n\\r]\\s*/', ' [NL] ',
             static::getTimestamp() .
             ' ' . static::stringifyArgs($args) .
             ' | ' . static::getCallee($args) .
@@ -124,7 +124,7 @@ class StreamDumper
                 continue;
             }
             
-            $argString = @json_encode($arg);
+            $argString = preg_replace('/\\s*[\\n\\r]\\s*/', '', @json_encode($arg));
             $type = gettype($arg);
             if (is_object($arg)) {
                 $out[] = '(' . $type . ': ' . get_class($arg) . ') ' . $argString;
