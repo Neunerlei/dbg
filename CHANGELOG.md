@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/Neunerlei/dbg/compare/v1.11.1...v1.12.0) (2022-05-09)
+
+
+### Features
+
+* add unique request id to all log outputs ([c829765](https://github.com/Neunerlei/dbg/commit/c8297650781414c5e4774efea4e62fca8631b38f))
+
 ### [1.11.1](https://github.com/Neunerlei/dbg/compare/v1.11.0...v1.11.1) (2022-04-19)
 
 
