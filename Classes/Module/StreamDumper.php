@@ -100,11 +100,12 @@ class StreamDumper
     protected static function buildLogLine(array $args): string
     {
         return preg_replace('/\\s*[\\n\\r]\\s*/', ' [NL] ',
-            static::getTimestamp() .
-            ' ' . static::stringifyArgs($args) .
-            ' | ' . static::getCallee($args) .
-            ' | ' . static::getRequestSource()
-        );
+                static::getTimestamp() .
+                ' [' . Dbg::getRequestId() . ']' .
+                ' ' . static::stringifyArgs($args) .
+                ' | ' . static::getCallee($args) .
+                ' | ' . static::getRequestSource()
+               ) . PHP_EOL;
     }
     
     /**

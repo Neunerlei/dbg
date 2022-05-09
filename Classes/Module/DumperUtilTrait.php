@@ -51,7 +51,7 @@ trait DumperUtilTrait
         $output = '';
         
         if (isset($callInfo['callee']['file'])) {
-            $output .= 'Called from ' . Kint::shortenPath($callInfo['callee']['file']) . ':' . $callInfo['callee']['line'];
+            $output .= 'Called from ' . $callInfo['callee']['file'] . ':' . $callInfo['callee']['line'];
         }
         
         if (isset($callInfo['callee']['function']) && (

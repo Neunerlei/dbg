@@ -59,7 +59,7 @@ class PhpConsole
                     $dispatcher->detectTraceAndSource = true;
                 }
                 
-                $dispatcher->dispatchDebug($arg, 'PHP-DEBUG', 1);
+                $dispatcher->dispatchDebug($arg, 'PHP-DEBUG' . Dbg::getRequestId(), 1);
             }
         }
         

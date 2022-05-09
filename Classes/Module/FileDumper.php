@@ -53,7 +53,7 @@ class FileDumper
         Kint::$return = $_return;
         Kint::$mode_default = $_modeDefault;
         
-        $content .= static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
+        $content .= Dbg::getRequestId() . ' ' . static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
         
         if (is_file($logFileName) && filesize($logFileName) > 0) {
             $content = PHP_EOL . PHP_EOL . PHP_EOL . $content;

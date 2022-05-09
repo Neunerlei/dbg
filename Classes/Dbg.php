@@ -73,6 +73,13 @@ class Dbg
         ];
     
     /**
+     * The request id to append to log lines
+     *
+     * @var string
+     */
+    protected static $requestId;
+    
+    /**
      * Initializes the debugger by applying our configuration to the Kint debugging tool
      */
     public static function init(): void
@@ -249,5 +256,23 @@ class Dbg
                 $callback($type, $functionName, $args);
             }
         }
+    }
+    
+    /**
+     * Generates/reads a unique request id that will be added to log outputs
+     *
+     * @return string
+     */
+    public static function getRequestId(): string
+    {
+        if (isset(static::$requestId)) {
+            return static::$requestId;
+        }
+        
+        if (isset($_SERVER['HTTP_X_REQUEST_ID'])) {
+            return static::$requestId = $_SERVER['HTTP_X_REQUEST_ID'];
+        }
+        
+        return static::$requestId = uniqid('request_', true);
     }
 }
