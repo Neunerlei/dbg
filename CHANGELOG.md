@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.1](https://github.com/Neunerlei/dbg/compare/v1.11.0...v1.11.1) (2022-04-19)
+
+
+### Bug Fixes
+
+* **StreamDumper:** don't remove commas ([5464f52](https://github.com/Neunerlei/dbg/commit/5464f52c11a1b53ebe8e62264829cd8bf8727fc7))
+
 ## [1.11.0](https://github.com/Neunerlei/dbg/compare/v1.10.1...v1.11.0) (2022-04-19)
 
 
