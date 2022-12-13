@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/Neunerlei/dbg/compare/v1.12.0...v2.0.0) (2022-12-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* major version update on kint debugger
+
+### Features
+
+* add editor file format config ([2d5e258](https://github.com/Neunerlei/dbg/commit/2d5e258ceab17e3e5d9ff85010e49d5c70948e27))
+* enable environment detection by default ([83d4cde](https://github.com/Neunerlei/dbg/commit/83d4cdefdd00adfcb5b14aa45963d952cf177e1e))
+* remove deprecated features ([4613619](https://github.com/Neunerlei/dbg/commit/4613619810077223344f12dc5ba621915d7ed8bc))
+* update kint to version 5 ([2e6f1c4](https://github.com/Neunerlei/dbg/commit/2e6f1c4fb889d637686ba07e5ca47fd282514d78))
+* use more common "APP_ENV" var for environment detection ([322f479](https://github.com/Neunerlei/dbg/commit/322f47969ef3640f527c134ba9931c81a5ed0eea))
+
+
+### Bug Fixes
+
+* make renderer implementations compatible with kint 5 ([dd39f29](https://github.com/Neunerlei/dbg/commit/dd39f292deb3dc9dd002690bfb5446eaef0c8868))
+
 ## [1.12.0](https://github.com/Neunerlei/dbg/compare/v1.11.1...v1.12.0) (2022-05-09)
 
 

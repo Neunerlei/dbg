@@ -189,5 +189,6 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.3.0",
+    "version": "2.0.0"
 }
