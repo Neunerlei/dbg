@@ -60,7 +60,7 @@ class Dbg
     protected static $config
         = [
             'enabled' => true,
-            'environmentDetection' => false,
+            'environmentDetection' => true,
             'envVarKey' => 'PROJECT_ENV',
             'envVarValue' => 'dev',
             'cliIsDev' => true,
@@ -129,7 +129,7 @@ class Dbg
             }
         }
     }
-    
+
     /**
      * Used to configure the debugging context.
      *
@@ -137,7 +137,7 @@ class Dbg
      *
      * - enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to
      * false, none of the functions will do or output anything.
-     * - environmentDetection: (bool) default: FALSE | Enables the environment detection mechanism if set to true.
+     * - environmentDetection: (bool) default: TRUE | Disables the environment detection mechanism if set to false.
      * - envVarKey: (string) default: PROJECT_ENV | Determines the name of the environment variable to look for when
      * enabling the debug feature.
      * - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
@@ -212,7 +212,7 @@ class Dbg
         }
         
         // NO Environment detection? -> Yes
-        if (($conf['environmentDetection'] ?? false) === false) {
+        if (($conf['environmentDetection'] ?? true) === false) {
             return true;
         }
         

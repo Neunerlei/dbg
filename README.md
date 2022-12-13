@@ -34,15 +34,21 @@ with a dynamic IP address). If you want to use this, you have to code that featu
 
 It is possible to define multiple options for the debugger. The configuration is performed using the dbgConfig() function. Possible config options are:
 
-- enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to false, none of the functions will do or output
+- enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to false,
+  none of the functions will do or output
   anything.
-- environmentDetection: (bool) default: FALSE | Enables the environment detection mechanism if set to true.
-    - envVarKey: (string) default: PROJECT_ENV | Determines the name of the environment variable to look for when enabling the debug feature.
-    - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect from the configured environment variable to
+- environmentDetection: (bool) default: TRUE | Disables the environment detection mechanism if set to false.
+    - envVarKey: (string) default: PROJECT_ENV | Determines the name of the environment variable to look for when
+      enabling the debug feature.
+    - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
+      from the configured environment variable to
       enable the debugger.
-    - cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or not.
-    - debugReferrer: (string|NULL) default: NULL | If set this will be expected as the referrer to enable the debugger capabilities.
-- preHooks: (callable|array) | One or multiple callbacks to run in front of each debugger function (dbg,dbge,trace,tracee,...). Useful for extending the
+    - cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or
+      not.
+    - debugReferrer: (string|NULL) default: NULL | If set this will be expected as the referrer to enable the debugger
+      capabilities.
+- preHooks: (callable|array) | One or multiple callbacks to run in front of each debugger function (
+  dbg,dbge,trace,tracee,...). Useful for extending the
   functionality. Each callback will receive $hookType, $callingFunction and $givenArguments as arguments.
 - postHooks: (callable|array) | Same as "preHooks" but run after the debug output.
 - consolePassword: (string|NULL) default: NULL | If set the phpConsole will require this value as password before printing the console output to the browser.
