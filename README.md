@@ -13,36 +13,41 @@ composer require neunerlei/dbg
 
 ## Environment detection
 
-It is not recommended to use this library in production. However if you have considered the risks and know what to do, this library tries to help you running it
-in production as securely as possible.
+It is not recommended to use this library in production. However, if you have considered the risks and know what to do,
+this library tries to help you to run it in production as securely as possible.
 
-To do so there are different mechanics you may use to to determine when you want to enable the debugger or not. First of all, to enable the environment
+To do so there are different mechanics you may use to determine when you want to enable the debugger or not. First of
+all, to enable the environment
 detection set the "environmentDetection" to true
 
-1. You can completely disable the functionality of this library by setting the "enabled" config option (see the "Configuration" section for further information)
+1. You can completely disable the functionality of this library by setting the "enabled" config option (see the "
+   Configuration" section for further information)
    to false.
-2. You may define a environment variable to determine if the debugging is enabled or not. By default the script will look for a env variable called "
-   PROJECT_ENV" which requires a value of "dev" to enable the debugging. You may configure the name of the variable, as well as the expected value.
-3. By default CLI commands are considered "save" and will allow execution of the debug methods. (See "cliIsDev" option)
-4. It is possible to only enable the debugging when a specific referrer is transmitted by your browser. To enable this take a look at the "debugReferrer"
-   option. (See the [referrer control](https://chrome.google.com/webstore/detail/referer-control/hnkcfpcejkafcihlgbojoidoihckciin?hl=en) extension for chrome.)
+2. You may define a environment variable to determine if the debugging is enabled or not. By default, the script will
+   look for a env variable called "APP_ENV" which requires a value of "dev" to enable the debugging. You may configure
+   the name of the variable, as well as the expected value. (PROJECT_ENV also works for legacy compatibility)
+3. By default, CLI commands are considered "save" and will allow execution of the debug methods. (See "cliIsDev" option)
+4. It is possible to only enable the debugging when a specific referrer is transmitted by your browser. To enable this
+   take a look at the "debugReferrer" option. (See
+   the [referrer control](https://chrome.google.com/webstore/detail/referer-control/hnkcfpcejkafcihlgbojoidoihckciin?hl=en)
+   extension for chrome.)
 
 **IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite error prone (especially when you work
 with a dynamic IP address). If you want to use this, you have to code that feature for yourself.
 
 ## Configuration
 
-It is possible to define multiple options for the debugger. The configuration is performed using the dbgConfig() function. Possible config options are:
+It is possible to define multiple options for the debugger.
+The configuration is performed using the `Neunerlei\Dbg\Dbg::config()` function. Possible config options are:
 
 - enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to false,
   none of the functions will do or output
   anything.
 - environmentDetection: (bool) default: TRUE | Disables the environment detection mechanism if set to false.
-    - envVarKey: (string) default: PROJECT_ENV | Determines the name of the environment variable to look for when
+    - envVarKey: (string) default: APP_ENV | Determines the name of the environment variable to look for when
       enabling the debug feature.
     - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
-      from the configured environment variable to
-      enable the debugger.
+      from the configured environment variable to enable the debugger.
     - cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or
       not.
     - debugReferrer: (string|NULL) default: NULL | If set this will be expected as the referrer to enable the debugger
@@ -113,7 +118,7 @@ This will output something like:
 Receives any number of arguments and will dump them into a plain log file. The logfile will be located (in order of priority):
 
 - $_ENV["_DBG_LOG_DIR"]/dbg_debug_logfile.log if this environment variable contains a writable directory path
-- dbgConfig("logDir") /dbg_debug_logfile.log if the environment variable is empty and the directory is writable
+- Dbg::config("logDir") /dbg_debug_logfile.log if the environment variable is empty and the directory is writable
 - /var/www/logs/dbg_debug_logfile.log if the logs directory is writable
 - /$SYS_TEMP_DIR/labor_debug_logfile.log
 
@@ -129,14 +134,14 @@ you work with docker. The output will always be a single line with all line-brea
 You can change the stream path to match your needs:
 
 - $_ENV['_DBG_LOG_STREAM'] to set the path via env variable
-- dbgConfig("logStream") to set the path via the configuration api
+- Dbg::config("logStream") to set the path via the configuration api
 
-### isDbgEnabled()
+### Dbg::isEnabled()
 
 This function returns true if the debug functions are currently operational (including the checks for the environment detection) and will return TRUE if so, or
 FALSE if not.
 
-### dbgConfig(string $key = "", $value = NULL)
+### Dbg::config(string $key = "", $value = NULL)
 
 This function is used to configure the debugger with the options seen in the "Configuration" section. If this function is called without arguments it will
 return the current list of config option. If it is called with a key but without value it will return the current value for the given key.
@@ -144,8 +149,8 @@ return the current list of config option. If it is called with a key but without
 If you supply both key and value you will set the given config option.
 
 ```php
- // Enable environment detection
- dbgConfig("environmentDetection", TRUE);
+ // Disable environment detection
+ Neunerlei\Dbg\Dbg::config("environmentDetection", FALSE);
  ```
 
 ## Postcardware

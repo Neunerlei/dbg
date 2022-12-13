@@ -61,7 +61,7 @@ class Dbg
         = [
             'enabled' => true,
             'environmentDetection' => true,
-            'envVarKey' => 'PROJECT_ENV',
+            'envVarKey' => 'APP_ENV',
             'envVarValue' => 'dev',
             'cliIsDev' => true,
             'debugReferrer' => null,
@@ -210,22 +210,28 @@ class Dbg
         if (($conf['enabled'] ?? true) === false) {
             return false;
         }
-        
+
         // NO Environment detection? -> Yes
         if (($conf['environmentDetection'] ?? true) === false) {
             return true;
         }
-        
+
         // Env variable matches expected value? -> Yes
-        if (getenv(($conf['envVarKey'] ?? 'PROJECT_ENV')) === (string)($conf['envVarValue'] ?? 'dev')) {
+        $env = getenv(($conf['envVarKey'] ?? 'APP_ENV'));
+        $expectedEnvValue = (string)($conf['envVarValue'] ?? 'dev');
+        if ($env === $expectedEnvValue) {
             return true;
         }
-        
+        // Legacy support for labor-digital base images, that use PROJECT_ENV instead of APP_ENV
+        if ($env === false && getenv('PROJECT_ENV') === $expectedEnvValue) {
+            return true;
+        }
+
         // CLI is treated as dev? -> Yes
         if (($conf['cliIsDev'] ?? true) && PHP_SAPI === 'cli') {
             return true;
         }
-        
+
         // Debug referrer is set and matches? -> Yes
         if (is_string($conf['debugReferrer'] ?? null)) {
             return ($_SERVER['HTTP_REFERER'] ?? null) === $conf['debugReferrer'];
