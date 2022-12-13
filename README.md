@@ -57,8 +57,13 @@ The configuration is performed using the `Neunerlei\Dbg\Dbg::config()` function.
   functionality. Each callback will receive $hookType, $callingFunction and $givenArguments as arguments.
 - postHooks: (callable|array) | Same as "preHooks" but run after the debug output.
 - consolePassword: (string|NULL) default: NULL | If set the phpConsole will require this value as password before printing the console output to the browser.
-- logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director. Make sure it exists and is writable by the
+- logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director. Make
+  sure it exists and is writable by the
   webserver!
+- editorFileFormat (string|NULL) default: null | Can be used to create clickable links to be opened in your
+  IDE of choice. Can be either a formatting pattern like "phpstorm://open?file=%f&line=%l",
+  or one of the predefined values: sublime, textmate, emacs, macvim, phpstorm, phpstorm-remotecall, idea, vscode,
+  vscode-insiders, vscode-remote, vscode-insiders-remote, vscodium, atom, nova, netbeans or xdebug
 
 ## Functions
 

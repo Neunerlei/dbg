@@ -44,14 +44,33 @@ class Dbg
 {
     public const HOOK_TYPE_PRE = 'preHooks';
     public const HOOK_TYPE_POST = 'postHooks';
-    
+
+    protected const EDITOR_LINK_FORMATS = [
+        'sublime' => 'subl://open?url=file://%f&line=%l',
+        'textmate' => 'txmt://open?url=file://%f&line=%l',
+        'emacs' => 'emacs://open?url=file://%f&line=%l',
+        'macvim' => 'mvim://open/?url=file://%f&line=%l',
+        'phpstorm' => 'phpstorm://open?file=%f&line=%l',
+        'phpstorm-remotecall' => 'http://localhost:8091?message=%f:%l',
+        'idea' => 'idea://open?file=%f&line=%l',
+        'vscode' => 'vscode://file/%f:%l',
+        'vscode-insiders' => 'vscode-insiders://file/%f:%l',
+        'vscode-remote' => 'vscode://vscode-remote/%f:%l',
+        'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%f:%l',
+        'vscodium' => 'vscodium://file/%f:%l',
+        'atom' => 'atom://core/open/file?filename=%f&line=%l',
+        'nova' => 'nova://core/open/file?filename=%f&line=%l',
+        'netbeans' => 'netbeans://open/?f=%f:%l',
+        'xdebug' => 'xdebug://%f@%l',
+    ];
+
     /**
      * True if the debugger was initialized and does not need to be initialized again
      *
      * @var bool
      */
     protected static $initialized = false;
-    
+
     /**
      * The main configuration storage
      *
@@ -70,6 +89,7 @@ class Dbg
             'consolePassword' => null,
             'logDir' => null,
             'logStream' => null,
+            'editorFileFormat' => null
         ];
     
     /**
@@ -87,16 +107,16 @@ class Dbg
         if (static::$initialized) {
             return;
         }
-        
+
         static::$initialized = true;
-        
+
         Kint::$enabled_mode = true;
         RichRenderer::$folder = false;
         RichRenderer::$access_paths = false;
         Kint::$renderers[Kint::MODE_TEXT] = ExtendedTextRenderer::class;
         Kint::$renderers[Kint::MODE_CLI] = ExtendedCliRenderer::class;
         Kint::$depth_limit = 8;
-        
+
         Kint::$aliases[] = 'dbg';
         Kint::$aliases[] = 'dbge';
         Kint::$aliases[] = 'logconsole';
@@ -118,7 +138,7 @@ class Dbg
             MicrotimePlugin::class,
             SerializePlugin::class,
         ];
-        
+
         // If we detect either a client that does not accept html, or the request
         // is executed using an "AJAX" request, we will use the text-renderer instead of the rich-renderer
         if (isset($_SERVER)) {
@@ -128,6 +148,8 @@ class Dbg
                 Kint::$mode_default = Kint::MODE_TEXT;
             }
         }
+
+        static::loadConfigFiles();
     }
 
     /**
@@ -154,9 +176,13 @@ class Dbg
      * printing the console output to the browser.
      * - logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director.
      * Make sure it exists and is writable by the webserver!
+     * - editorFileFormat (string|NULL) default: null | Can be used to create clickable links to be opened in your
+     * IDE of choice. Can be either a formatting pattern like "phpstorm://open?file=%f&line=%l",
+     * or one of the predefined values: sublime, textmate, emacs, macvim, phpstorm, phpstorm-remotecall, idea, vscode,
+     * vscode-insiders, vscode-remote, vscode-insiders-remote, vscodium, atom, nova, netbeans or xdebug
      *
-     * @param   string|null  $key
-     * @param   null         $value
+     * @param string|null $key
+     * @param null $value
      *
      * @return bool|mixed
      */
@@ -190,6 +216,23 @@ class Dbg
             case 'enabled':
                 static::$config[$key] = Kint::$enabled_mode = $value === true;
                 break;
+            case 'editorFileFormat':
+                if (!is_string($value)) {
+                    throw new InvalidArgumentException('The given value for key: ' . $key . ' has to be a string!');
+                }
+
+                if (empty($value)) {
+                    $value = null;
+                }
+
+                if (isset(static::EDITOR_LINK_FORMATS[$value])) {
+                    $value = static::EDITOR_LINK_FORMATS[$value];
+                }
+
+                static::$config[$key] = $value;
+                Kint::$file_link_format = $value;
+
+                break;
             default:
                 static::$config[$key] = $value;
         }
@@ -217,15 +260,17 @@ class Dbg
         }
 
         // Env variable matches expected value? -> Yes
-        $env = getenv(($conf['envVarKey'] ?? 'APP_ENV'));
+        $possibleEnvKeys = [($conf['envVarKey'] ?? 'APP_ENV'), 'PROJECT_ENV'];
         $expectedEnvValue = (string)($conf['envVarValue'] ?? 'dev');
-        if ($env === $expectedEnvValue) {
-            return true;
+
+        foreach ($possibleEnvKeys as $envKey) {
+            $env = getenv($envKey);
+            if ($env === $expectedEnvValue
+                || ($env === false && ($_ENV[$envKey] ?? null) === $expectedEnvValue)) {
+                return true;
+            }
         }
-        // Legacy support for labor-digital base images, that use PROJECT_ENV instead of APP_ENV
-        if ($env === false && getenv('PROJECT_ENV') === $expectedEnvValue) {
-            return true;
-        }
+
 
         // CLI is treated as dev? -> Yes
         if (($conf['cliIsDev'] ?? true) && PHP_SAPI === 'cli') {
@@ -271,11 +316,34 @@ class Dbg
         if (isset(static::$requestId)) {
             return static::$requestId;
         }
-        
+
         if (isset($_SERVER['HTTP_X_REQUEST_ID'])) {
             return static::$requestId = $_SERVER['HTTP_X_REQUEST_ID'];
         }
-        
+
         return static::$requestId = uniqid('request_', true);
+    }
+
+    /**
+     * Tries to load additional config files based on well known server files
+     * @return void
+     */
+    protected static function loadConfigFiles(): void
+    {
+        $directories = [];
+
+        // Load well known keys in the $_SERVER super-globals array as potential directory
+        foreach (['DOCUMENT_ROOT', 'DDEV_COMPOSER_ROOT', 'PWD'] as $wellKnownServerKey) {
+            if (isset($_SERVER[$wellKnownServerKey])) {
+                $directories[] = $_SERVER[$wellKnownServerKey];
+            }
+        }
+
+        foreach ($directories as $dir) {
+            $configFile = rtrim($dir, '\\/') . '/dbg.config.php';
+            if (is_readable($configFile)) {
+                require_once $configFile;
+            }
+        }
     }
 }
