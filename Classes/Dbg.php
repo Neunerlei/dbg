@@ -90,9 +90,6 @@ class Dbg
         
         static::$initialized = true;
         
-        // @todo remove this in the next major version
-        $GLOBALS['_DBG_CONFIG'] = &static::$config;
-        
         Kint::$enabled_mode = true;
         RichRenderer::$folder = false;
         RichRenderer::$access_paths = false;

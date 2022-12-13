@@ -19,7 +19,6 @@ declare(strict_types=1);
  * Last modified: 2020.02.27 at 11:52
  */
 
-use Neunerlei\Dbg\Dbg;
 use Neunerlei\Dbg\Module\Dumper;
 use Neunerlei\Dbg\Module\FileDumper;
 use Neunerlei\Dbg\Module\PhpConsole as PhpConsoleModule;
@@ -32,7 +31,7 @@ if (! function_exists('dbg')) {
      *
      * @param   array  $args
      */
-    function dbg(...$args)
+    function dbg(...$args): void
     {
         Dumper::dump(__FUNCTION__, $args, false);
     }
@@ -44,7 +43,7 @@ if (! function_exists('dbge')) {
      *
      * @param   array  $args
      */
-    function dbge(...$args)
+    function dbge(...$args): void
     {
         Dumper::dump(__FUNCTION__, $args, true);
     }
@@ -62,7 +61,7 @@ if (! function_exists('trace')) {
      *                           If set to TRUE they will always be shown
      *                           If left as NULL, the args and objects will be shown except the script runs in the CLI
      */
-    function trace(array $options = [])
+    function trace(array $options = []): void
     {
         Tracer::trace(__FUNCTION__, func_get_args(), false);
     }
@@ -80,7 +79,7 @@ if (! function_exists('tracee')) {
      *                           If set to false they will always be shown
      *                           If left as NULL, the args and objects will be shown except the script runs in the CLI
      */
-    function tracee(array $options = [])
+    function tracee(array $options = []): void
     {
         Tracer::trace(__FUNCTION__, func_get_args(), true);
     }
@@ -89,13 +88,13 @@ if (! function_exists('tracee')) {
 if (! function_exists('logConsole')) {
     /**
      * Dumps the given arguments to the javascript console when using the
-     * php console chrome extension https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef
+     * php console Chrome extension https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef
      *
      * Set the last, given value to TRUE (with more than a single value) to also print the log to the console
      *
-     * @param   array  $args
+     * @param array $args
      */
-    function logConsole(...$args)
+    function logConsole(...$args): void
     {
         PhpConsoleModule::log(__FUNCTION__, $args);
     }
@@ -135,81 +134,4 @@ if (! function_exists('logStream')) {
     {
         return StreamDumper::dump(__FUNCTION__, $args);
     }
-}
-
-if (! function_exists('dbgConfig')) {
-    /**
-     * Used to configure the debugging context.
-     *
-     * Possible values:
-     *
-     * - enabled: (bool) default: TRUE | Master switch to enable/disable the debugging functionality. If you set this to
-     * false, none of the functions will do or output anything.
-     * - environmentDetection: (bool) default: FALSE | Enables the environment detection mechanism if set to true.
-     * - envVarKey: (string) default: PROJECT_ENV | Determines the name of the environment variable to look for when
-     * enabling the debug feature.
-     * - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
-     * from the configured environment variable to enable the debugger.
-     * - cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or
-     * not.
-     * - debugReferrer: (string|NULL) default NULL | If set this will be expected as the referrer to enable the debugger
-     * capabilities.
-     * - preHooks: (callable|array) | One or multiple callbacks to run in front of each debugger function
-     * (dbg,dbge,trace,tracee,...). Useful for extending the functionality. Each callback will receive $hookType,
-     * $callingFunction and $givenArguments as arguments.
-     * - postHooks: (callable|array) | Same as "preHooks" but run after the debug output.
-     * - consolePassword: (string|null) default: NULL | If set the phpConsole will require this value as password before
-     * printing the console output to the browser.
-     * - logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director.
-     * Make sure it exists and is writable by the webserver!
-     *
-     * @param   string  $key
-     * @param   null    $value
-     *
-     * @return bool|mixed
-     * @deprecated use Dbg::config instead
-     * @see        Dbg::config
-     */
-    function dbgConfig(string $key = '', $value = null)
-    {
-        return Dbg::config($key, $value);
-    }
-    
-    // @todo remove this in the next major version
-    if (! defined('_DBG_CONFIG_LOADED')) {
-        define('_DBG_CONFIG_LOADED', true);
-    }
-}
-
-if (! function_exists('isDbgEnabled')) {
-    /**
-     * Returns true if the debugger is enabled
-     *
-     * @return bool
-     * @deprecated use Dbg::isEnabled instead
-     * @see        Dbg::isEnabled()
-     */
-    function isDbgEnabled(): bool
-    {
-        return Dbg::isEnabled();
-    }
-    
-}
-
-if (! function_exists('_dbgIntCallHooks')) {
-    /**
-     * Internal helper to keep the hook execution dry...
-     *
-     * @param   string  $type
-     * @param   string  $function
-     * @param   array   $args
-     *
-     * @deprecated use Dbg::runHooks instead
-     * @see        Dbg::runHooks()
-     */
-    function _dbgIntCallHooks(string $type, string $function, array $args)
-    {
-        Dbg::runHooks($type, $function, $args);
-    }
-    
 }
