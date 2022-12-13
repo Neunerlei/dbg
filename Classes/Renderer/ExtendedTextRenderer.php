@@ -27,12 +27,12 @@ use Kint\Renderer\TextRenderer;
 
 class ExtendedTextRenderer extends TextRenderer
 {
-    public function boxText($text, $width)
+    public function boxText(string $text, int $width): string
     {
         if (empty($text)) {
             return '';
         }
-        
+
         return parent::boxText($text, $width);
     }
 }

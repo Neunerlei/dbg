@@ -27,13 +27,13 @@ use Kint\Renderer\CliRenderer;
 
 class ExtendedCliRenderer extends CliRenderer
 {
-    
-    public function boxText($text, $width)
+
+    public function boxText(string $text, int $width): string
     {
         if (empty($text)) {
             return '';
         }
-        
+
         return parent::boxText($text, $width);
     }
 }
