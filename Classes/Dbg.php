@@ -98,7 +98,7 @@ class Dbg
         RichRenderer::$access_paths = false;
         Kint::$renderers[Kint::MODE_TEXT] = ExtendedTextRenderer::class;
         Kint::$renderers[Kint::MODE_CLI] = ExtendedCliRenderer::class;
-        Kint::$max_depth = 8;
+        Kint::$depth_limit = 8;
         
         Kint::$aliases[] = 'dbg';
         Kint::$aliases[] = 'dbge';

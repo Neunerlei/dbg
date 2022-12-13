@@ -25,45 +25,46 @@ namespace Neunerlei\Dbg\Plugins;
 use Kint\Kint;
 use Kint\Object\BasicObject;
 use Kint\Object\InstanceObject;
+use Kint\Parser\AbstractPlugin;
 use Kint\Parser\Parser;
-use Kint\Parser\Plugin;
+use Kint\Zval\Value;
 use function get_class;
 
-class DedupePlugin extends Plugin
+class DedupePlugin extends AbstractPlugin
 {
     /**
      * @var Parser
      */
     protected $parser;
-    
+
     protected $knownObjects = [];
-    
-    public function getTypes()
+
+    public function getTypes(): array
     {
         $this->knownObjects = [];
-        
+
         return ['object'];
     }
-    
-    public function getTriggers()
+
+    public function getTriggers(): int
     {
         return Parser::TRIGGER_BEGIN;
     }
-    
-    public function parse(&$variable, BasicObject &$o, $trigger)
+
+    public function parse(&$var, Value &$o, int $trigger): void
     {
         // Ignore if this is a class without namespace -> probably built in
-        if (strpos(get_class($variable), "\\") === false) {
+        if (strpos(get_class($var), "\\") === false) {
             return;
         }
-        
+
         // Get the object id
-        $id = spl_object_hash($variable);
+        $id = spl_object_hash($var);
         if (isset($this->knownObjects[$id])) {
-            $object = new InstanceObject();
+            $object = new Value();
             $object->transplant($o);
-            $object->depth = max($o->depth, Kint::$max_depth - 1);
-            $object->classname = get_class($variable);
+            $object->depth = max($o->depth, Kint::$depth_limit - 1);
+            $object->classname = get_class($var);
             $object->hash = $id;
             $o = $object;
         }

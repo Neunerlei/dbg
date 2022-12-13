@@ -6,12 +6,6 @@
 	"version": "1.12.0",
 	"authors": [
 		{
-			"name": "LABOR.digital",
-			"email": "info@labor.tools",
-			"homepage": "https://www.labor.digital",
-			"role": "Company"
-		},
-		{
 			"name": "Martin Neundorfer",
 			"email": "code@neunerlei.eu",
 			"homepage": "https://www.neunerlei.eu",
@@ -23,7 +17,7 @@
 		"source": "https://github.com/neunerlei/dbg"
 	},
 	"require": {
-		"kint-php/kint": "^3.3",
+		"kint-php/kint": "^5.0.1",
 		"0.0.0/composer-include-files": "^1.5",
 		"php-console/php-console": "^3.1"
 	},
@@ -36,5 +30,10 @@
 		"include_files": [
 			"init.php"
 		]
+	},
+	"config": {
+		"allow-plugins": {
+			"0.0.0/composer-include-files": true
+		}
 	}
 }

@@ -4,24 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "177b06ec04e155aae7ef55f0d1cb3a4d",
+    "content-hash": "52b2ab504a0a33c2f6bbdfc6ab2054d7",
     "packages": [
         {
             "name": "0.0.0/composer-include-files",
-            "version": "1.5.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpexpertsinc/composer-include-files.git",
-                "reference": "6776421c358c6a25b16eccb617de9478b7ae2019"
+                "url": "https://github.com/hopeseekr-contribs/composer-include-files.git",
+                "reference": "0e77aa7a723ac7a32a6b4f4ce4666872a642e845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpexpertsinc/composer-include-files/zipball/6776421c358c6a25b16eccb617de9478b7ae2019",
-                "reference": "6776421c358c6a25b16eccb617de9478b7ae2019",
+                "url": "https://api.github.com/repos/hopeseekr-contribs/composer-include-files/zipball/0e77aa7a723ac7a32a6b4f4ce4666872a642e845",
+                "reference": "0e77aa7a723ac7a32a6b4f4ce4666872a642e845",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "composer-plugin-api": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -38,12 +41,12 @@
             ],
             "authors": [
                 {
-                    "name": "Theodore R. Smith",
-                    "email": "theodore@phpexperts.pro"
-                },
-                {
                     "name": "Tim Robertson",
                     "email": "funkjedi@gmail.com"
+                },
+                {
+                    "name": "Theodore R. Smith",
+                    "email": "theodore@phpexperts.pro"
                 }
             ],
             "description": "Include files at a higher priority than autoload files. Useful for overriding Laravel helpers.",
@@ -52,41 +55,39 @@
                 "autoload",
                 "composer"
             ],
-            "time": "2019-05-09T08:06:44+00:00"
+            "support": {
+                "source": "https://github.com/hopeseekr-contribs/composer-include-files/tree/1.6.1"
+            },
+            "time": "2022-06-18T07:04:13+00:00"
         },
         {
             "name": "kint-php/kint",
-            "version": "3.2.2",
+            "version": "5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kint-php/kint.git",
-                "reference": "c332db9529fdce74ae6a347f97a1e7395e76ced8"
+                "reference": "dd7fbd9673a88f6c5d2f838aacb2340afa4ce044"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kint-php/kint/zipball/c332db9529fdce74ae6a347f97a1e7395e76ced8",
-                "reference": "c332db9529fdce74ae6a347f97a1e7395e76ced8",
+                "url": "https://api.github.com/repos/kint-php/kint/zipball/dd7fbd9673a88f6c5d2f838aacb2340afa4ce044",
+                "reference": "dd7fbd9673a88f6c5d2f838aacb2340afa4ce044",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.6"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "phpunit/phpunit": "^4.0",
-                "seld/phar-utils": "^1.0",
-                "symfony/finder": "^2.0 || ^3.0 || ^4.0",
-                "vimeo/psalm": "^3.0"
+                "friendsofphp/php-cs-fixer": "^3",
+                "phpspec/prophecy-phpunit": "^2",
+                "phpunit/phpunit": "^9",
+                "seld/phar-utils": "^1",
+                "symfony/finder": "^4.0 || ^5.0 || ^6.0",
+                "vimeo/psalm": "^5@dev"
             },
             "suggest": {
-                "ext-ctype": "Simple data type tests",
-                "ext-iconv": "Provides fallback detection for ambiguous legacy string encodings such as the Windows and ISO 8859 code pages",
-                "ext-mbstring": "Provides string encoding detection",
-                "kint-php/kint-js": "Provides a simplified dump to console.log()",
-                "kint-php/kint-twig": "Provides d() and s() functions in twig templates",
-                "symfony/polyfill-ctype": "Replacement for ext-ctype if missing",
-                "symfony/polyfill-iconv": "Replacement for ext-iconv if missing",
-                "symfony/polyfill-mbstring": "Replacement for ext-mbstring if missing"
+                "kint-php/kint-helpers": "Provides extra helper functions",
+                "kint-php/kint-twig": "Provides d() and s() functions in twig templates"
             },
             "type": "library",
             "autoload": {
@@ -103,10 +104,6 @@
             ],
             "authors": [
                 {
-                    "name": "Rokas Šleinius",
-                    "homepage": "https://github.com/raveren"
-                },
-                {
                     "name": "Jonathan Vollebregt",
                     "homepage": "https://github.com/jnvsor"
                 },
@@ -122,7 +119,66 @@
                 "kint",
                 "php"
             ],
-            "time": "2019-05-03T16:49:16+00:00"
+            "support": {
+                "issues": "https://github.com/kint-php/kint/issues",
+                "source": "https://github.com/kint-php/kint/tree/5.0.1"
+            },
+            "time": "2022-11-22T12:16:00+00:00"
+        },
+        {
+            "name": "php-console/php-console",
+            "version": "3.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barbushin/php-console.git",
+                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barbushin/php-console/zipball/aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
+                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "ext-mbstring": "*",
+                "phpunit/phpunit": "^4.8",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpConsole\\": "src/PhpConsole"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Barbushin",
+                    "email": "barbushin@gmail.com",
+                    "homepage": "http://linkedin.com/in/barbushin"
+                }
+            ],
+            "description": "PHP library for Google Chrome extension \"PHP Console\".",
+            "homepage": "https://github.com/barbushin/php-console",
+            "keywords": [
+                "chrome",
+                "debug",
+                "error handler",
+                "errors",
+                "google chrome",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/barbushin/php-console/issues",
+                "source": "https://github.com/barbushin/php-console/tree/master"
+            },
+            "time": "2019-07-25T03:43:28+00:00"
         }
     ],
     "packages-dev": [],
@@ -133,5 +189,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "version": "1.12.0"
+    "plugin-api-version": "2.3.0"
 }
