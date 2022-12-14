@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/Neunerlei/dbg/compare/v2.0.0...v2.0.1) (2022-12-14)
+
+
+### Bug Fixes
+
+* update composer.json php requirement ([cd5258b](https://github.com/Neunerlei/dbg/commit/cd5258bb228ed8c501f5db89ff07023d5739069c))
+
 ## [2.0.0](https://github.com/Neunerlei/dbg/compare/v1.12.0...v2.0.0) (2022-12-13)
 
 
