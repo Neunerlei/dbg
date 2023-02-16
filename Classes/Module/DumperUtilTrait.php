@@ -47,7 +47,7 @@ trait DumperUtilTrait
     
     protected static function getCallee(array $args): string
     {
-        $callInfo = Kint::getCallInfo(Kint::$aliases, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), count($args));
+        $callInfo = Kint::getCallInfo(Kint::$aliases, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), $args);
         $output = '';
         
         if (isset($callInfo['callee']['file'])) {
