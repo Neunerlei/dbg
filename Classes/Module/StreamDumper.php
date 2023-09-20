@@ -103,7 +103,7 @@ class StreamDumper
                 static::getTimestamp() .
                 ' [' . Dbg::getRequestId() . ']' .
                 ' ' . static::stringifyArgs($args) .
-                ' | ' . static::getCallee($args) .
+                ' | ' . static::getCallee() .
                 ' | ' . static::getRequestSource()
                ) . PHP_EOL;
     }
@@ -135,7 +135,7 @@ class StreamDumper
             $out[] = '(' . $type . ') ' . $argString;
         }
         
-        return implode(' || ', $out);
+        return implode(' / ', $out);
     }
     
     /**

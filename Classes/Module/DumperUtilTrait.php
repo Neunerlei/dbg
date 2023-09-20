@@ -23,56 +23,53 @@ declare(strict_types=1);
 namespace Neunerlei\Dbg\Module;
 
 
+use Grpc\Call;
 use Kint\Kint;
+use Neunerlei\Dbg\Util\Callee;
+use Neunerlei\Dbg\Util\RequestSource;
+use Neunerlei\Dbg\Util\Timestamp;
 
 trait DumperUtilTrait
 {
-    protected static function getTimestamp(): string
-    {
-        return '[' . (new \DateTime())->format('Y-m-d H:i:s e') . ']';
+    /**
+     * @var \Neunerlei\Dbg\Util\RequestSource
+     */
+    protected static $requestSource;
+    
+    /**
+     * @var \Neunerlei\Dbg\Util\Callee
+     */
+    protected static $callee;
+    
+    /**
+     * @var \Neunerlei\Dbg\Util\Timestamp
+     */
+    protected static $timestamp;
+    
+    public static function setTimestamp(Timestamp $timestamp): void{
+        static::$timestamp = $timestamp;
     }
     
-    protected static function getRequestSource(): string
+    protected static function getTimestamp(): Timestamp
     {
-        if (isset($_SERVER['SERVER_NAME'], $_SERVER['REQUEST_URI'])) {
-            return 'URL: ' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-        }
-        
-        if (PHP_SAPI === 'cli') {
-            return 'Called from CLI';
-        }
-        
-        return 'Unknown source';
+        return static::$timestamp ?? new Timestamp(new \DateTime());
     }
     
-    protected static function getCallee(array $args): string
+    public static function setRequestSource(RequestSource $requestSource): void {
+        static::$requestSource = $requestSource;
+    }
+    
+    protected static function getRequestSource(): RequestSource
     {
-        $callInfo = Kint::getCallInfo(Kint::$aliases, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), count($args));
-        $output = '';
-        
-        if (isset($callInfo['callee']['file'])) {
-            $output .= 'Called from ' . $callInfo['callee']['file'] . ':' . $callInfo['callee']['line'];
-        }
-        
-        if (isset($callInfo['callee']['function']) && (
-                ! empty($callInfo['callee']['class']) ||
-                ! in_array(
-                    $callInfo['callee']['function'],
-                    ['include', 'include_once', 'require', 'require_once'],
-                    true
-                )
-            )
-        ) {
-            $output .= ' [';
-            if (isset($callInfo['callee']['class'])) {
-                $output .= $callInfo['callee']['class'];
-            }
-            if (isset($callInfo['callee']['type'])) {
-                $output .= $callInfo['callee']['type'];
-            }
-            $output .= $callInfo['callee']['function'] . '()]';
-        }
-        
-        return $output;
+        return static::$requestSource ?? new RequestSource();
+    }
+    
+    public static function setCallee(Callee $callee): void{
+        static::$callee = $callee;
+    }
+    
+    protected static function getCallee(): Callee
+    {
+        return static::$callee ?? new Callee();
     }
 }
