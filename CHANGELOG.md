@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/Neunerlei/dbg/compare/v2.0.1...v2.1.0) (2023-09-20)
+
+
+### Features
+
+* avoid throwing exceptions in iterator and toString Kint plugins ([c8882df](https://github.com/Neunerlei/dbg/commit/c8882df4a74f8b7dccf560a6be28a0749f85967e))
+* update composer dependencies ([2938f36](https://github.com/Neunerlei/dbg/commit/2938f3672ab04aae5434fa028de1e04eb410e669))
+
 ### [2.0.1](https://github.com/Neunerlei/dbg/compare/v2.0.0...v2.0.1) (2022-12-14)
 
 
