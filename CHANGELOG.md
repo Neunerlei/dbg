@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/Neunerlei/dbg/compare/v2.1.0...v2.2.0) (2023-12-26)
+
+
+### Features
+
+* prepare package for unit tests ([1fb2e99](https://github.com/Neunerlei/dbg/commit/1fb2e9940bd25ac521ff8ce58eaf4d9aabfb20a5))
+
 ## [2.1.0](https://github.com/Neunerlei/dbg/compare/v2.0.1...v2.1.0) (2023-09-20)
 
 
