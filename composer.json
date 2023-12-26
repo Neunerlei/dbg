@@ -1,40 +1,63 @@
 {
-	"name": "neunerlei/dbg",
-	"description": "PHP debugging suitcase for your daily work",
-	"type": "library",
-	"license": "Apache-2.0",
-	"version": "2.1.0",
-	"authors": [
-		{
-			"name": "Martin Neundorfer",
-			"email": "code@neunerlei.eu",
-			"homepage": "https://www.neunerlei.eu",
-			"role": "Developer"
-		}
-	],
-	"support": {
-		"issues": "https://github.com/neunerlei/dbg/issues",
-		"source": "https://github.com/neunerlei/dbg"
-	},
-	"require": {
-		"php": ">=7.4",
-		"kint-php/kint": "^5.0.7",
-		"0.0.0/composer-include-files": "^1.5",
-		"php-console/php-console": "^3.1"
-	},
-	"autoload": {
-		"psr-4": {
-			"Neunerlei\\Dbg\\": "Classes/"
-		}
-	},
-	"extra": {
-		"include_files": [
-			"init.php"
-		]
-	},
-	"config": {
-		"allow-plugins": {
-			"0.0.0/composer-include-files": true
-		}
-	}
+  "name": "neunerlei/dbg",
+  "description": "PHP debugging suitcase for your daily work",
+  "type": "library",
+  "license": "Apache-2.0",
+  "version": "2.1.0",
+  "authors": [
+    {
+      "name": "Martin Neundorfer",
+      "email": "code@neunerlei.eu",
+      "homepage": "https://www.neunerlei.eu",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/neunerlei/dbg/issues",
+    "source": "https://github.com/neunerlei/dbg"
+  },
+  "require": {
+    "php": ">=7.4 <8.4",
+    "kint-php/kint": "^5.0.7",
+    "0.0.0/composer-include-files": "^1.5",
+    "php-console/php-console": "^3.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Neunerlei\\Dbg\\": "src/Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Neunerlei\\Dbg\\Tests\\Unit\\": "tests/unit/"
+    }
+  },
+  "extra": {
+    "include_files": [
+      "src/init.php"
+    ]
+  },
+  "archive": {
+    "exclude": [
+      "bin",
+      ".gitignore",
+      ".gitattributes",
+      ".env",
+      "docker-compose.yml",
+      "Dockerfile"
+    ]
+  },
+  "scripts": {
+    "test:unit": "phpunit --testsuite unit --coverage-html ./.phpunit.coverage",
+    "test:unit:coverage": "XDEBUG_MODE=coverage phpunit --testsuite unit --coverage-html ./.phpunit.coverage",
+    "test:unit:coverage:clover": "XDEBUG_MODE=coverage phpunit --testsuite unit --coverage-clover Tests/Coverage.xml"
+  },
+  "config": {
+    "allow-plugins": {
+      "0.0.0/composer-include-files": true
+    }
+  }
 }

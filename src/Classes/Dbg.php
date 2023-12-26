@@ -273,8 +273,7 @@ class Dbg
                 return true;
             }
         }
-        
-        
+
         // CLI is treated as dev? -> Yes
         if (($conf['cliIsDev'] ?? true) && PHP_SAPI === 'cli') {
             return true;

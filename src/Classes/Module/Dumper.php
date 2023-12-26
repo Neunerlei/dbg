@@ -31,20 +31,20 @@ class Dumper
 {
     protected static $hasDumpedOnce = false;
     protected static $isDumping = false;
-    
+
     public static function dump(string $functionName, array $args, bool $exit): void
     {
-        if (! Dbg::isEnabled()) {
+        if (!Dbg::isEnabled()) {
             return;
         }
-        
-        if (static::$isDumping && ! static::$hasDumpedOnce) {
+
+        if (static::$isDumping && !static::$hasDumpedOnce) {
             $oldPreRenderState = RichRenderer::$always_pre_render;
             RichRenderer::$always_pre_render = true;
         }
-        
+
         static::$isDumping = true;
-        
+
         try {
             Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
             Kint::dump(...$args);
@@ -52,12 +52,12 @@ class Dumper
         } finally {
             static::$isDumping = false;
             static::$hasDumpedOnce = true;
-            
+
             if (isset($oldPreRenderState)) {
                 RichRenderer::$always_pre_render = $oldPreRenderState;
             }
         }
-        
+
         if ($exit) {
             exit();
         }
