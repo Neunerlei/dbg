@@ -44,6 +44,7 @@
     "exclude": [
       "bin",
       ".gitignore",
+      ".github",
       ".gitattributes",
       ".env",
       "docker-compose.yml",
