@@ -26,13 +26,14 @@ namespace Neunerlei\Dbg\Module;
 use Kint\Kint;
 use Kint\Renderer\RichRenderer;
 use Neunerlei\Dbg\Dbg;
+use Neunerlei\Dbg\HookType;
 
 class Dumper
 {
-    protected static $hasDumpedOnce = false;
-    protected static $isDumping = false;
+    protected static bool $hasDumpedOnce = false;
+    protected static bool $isDumping = false;
 
-    public static function dump(string $functionName, array $args, bool $exit): void
+    public static function dump(array $args, bool $exit): void
     {
         if (!Dbg::isEnabled()) {
             return;
@@ -46,9 +47,9 @@ class Dumper
         static::$isDumping = true;
 
         try {
-            Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
+            Dbg::hooks()->trigger(HookType::BEFORE_DUMP, ...$args);
             Kint::dump(...$args);
-            Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
+            Dbg::hooks()->trigger(HookType::AFTER_DUMP, ...$args);
         } finally {
             static::$isDumping = false;
             static::$hasDumpedOnce = true;

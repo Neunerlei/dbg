@@ -17,9 +17,9 @@
     "source": "https://github.com/neunerlei/dbg"
   },
   "require": {
-    "php": ">=7.4 <8.4",
-    "kint-php/kint": "^5.0.7",
-    "0.0.0/composer-include-files": "^1.5",
+    "php": ">=8.2",
+    "kint-php/kint": "^6.0",
+    "0.0.0/composer-include-files": "^1.6",
     "php-console/php-console": "^3.1"
   },
   "require-dev": {

@@ -6,4 +6,4 @@ else
   exit
 fi
 
-${BASH_SOURCE%/*}/_env/bashly.sh generate
+"${BIN_DIR}/_env/bashly.sh" generate

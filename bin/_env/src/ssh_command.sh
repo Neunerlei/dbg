@@ -1,5 +1,4 @@
-if ! isDockerContainerRunning; then
-  run up
-fi
+SERVICE=${args[service]:-$DEFAULT_SERVICE_NAME}
+CMD=${args[--cmd]}
 
-$DOCKER_EXECUTABLE exec -ti ${DEFAULT_CONTAINER_NAME} ${args[--cmd]:-bash}
+dockerSsh ${SERVICE} "${CMD}"

@@ -1,5 +1,5 @@
 areComposerDependenciesInstalled(){
-  if [ -f ${PROJECT_ROOT_DIR}/vendor/autoload.php ]; then
+  if [ -f ${PROJECT_ROOT_DIR}/app/vendor/autoload.php ]; then
     return
   fi
 

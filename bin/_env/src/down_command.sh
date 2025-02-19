@@ -1,1 +1,1 @@
-${DOCKER_COMPOSE_EXECUTABLE} down ${other_args[*]}
+dockerDown ${other_args[*]}

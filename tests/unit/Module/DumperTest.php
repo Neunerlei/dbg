@@ -6,16 +6,22 @@ namespace Neunerlei\Dbg\Tests\Unit\Module;
 
 
 use Neunerlei\Dbg\Dbg;
+use Neunerlei\Dbg\HookType;
 use Neunerlei\Dbg\Module\Dumper;
 use Neunerlei\Dbg\Tests\Unit\TestCase\AbstractDbgTestCase;
 
 class DumperTest extends AbstractDbgTestCase
 {
+    protected function tearDown(): void
+    {
+        Dbg::config()->setEnabled(true);
+    }
+
     public function testItDoesNothingIfDbgIsNotEnabled(): void
     {
-        Dbg::config('enabled', false);
+        Dbg::config()->setEnabled(false);
         $this->expectOutputString('');
-        Dumper::dump('foo', [], false);
+        Dumper::dump([], false);
     }
 
     public function testItExecutesTheRegisteredHooksWhenDumping(): void
@@ -23,26 +29,17 @@ class DumperTest extends AbstractDbgTestCase
         $args = ['true', 'bar'];
         $c = 0;
 
-        Dbg::config('enabled', true);
-        Dbg::config(Dbg::HOOK_TYPE_PRE, [
-            function ($type, $functionName, $_args) use (&$c, $args) {
-                $this->assertEquals(Dbg::HOOK_TYPE_PRE, $type);
-                $this->assertEquals(self::TEST_FUNCTION_NAME, $functionName);
+        Dbg::hooks()
+            ->addListener(HookType::BEFORE_DUMP, function (...$_args) use (&$c, $args) {
                 $this->assertEquals($args, $_args);
                 $c++;
-            }
-        ]);
-        Dbg::config(Dbg::HOOK_TYPE_POST, [
-            function ($type, $functionName, $_args) use (&$c, $args) {
-                $this->assertEquals(Dbg::HOOK_TYPE_POST, $type);
-                $this->assertEquals(self::TEST_FUNCTION_NAME, $functionName);
+            })->addListener(HookType::AFTER_DUMP, function (...$_args) use (&$c, $args) {
                 $this->assertEquals($args, $_args);
                 $c++;
-            }
-        ]);
+            });
 
         $this->runHandler(function (...$args) {
-            Dumper::dump(self::TEST_FUNCTION_NAME, $args, false);
+            Dumper::dump($args, false);
         }, ...$args);
 
         $this->assertSame(<<<EXPECTED

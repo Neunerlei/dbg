@@ -1,15 +1,3 @@
-# Loads the script environment file or dies if it does not exist
-loadEnvFile(){
-  ENV_FILE=${ENV_FILE:-"${PROJECT_ROOT_DIR}/.env"}
-
-  if [ ! -f ${ENV_FILE} ]; then
-    echo "Missing ${ENV_FILE} file! Please copy .env.tpl, rename it to .env and add the required values before continuing!";
-    exit 1;
-  fi
-
-  source ${ENV_FILE}
-}
-
 # Asserts that the provided command exist, or kills the script
 assertCommandExists(){
   MESSAGE=${2:-"Error: the required executable ${1} does not exist"}
@@ -71,7 +59,7 @@ determineHostType() {
 
 determineOsPlatform() {
   if [[ $OS_TYPE == 'LINUX' ]]; then
-    echo $(dpkg --print-architecture)
+    echo $(uname -m)
     return
   fi
 

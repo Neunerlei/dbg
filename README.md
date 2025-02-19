@@ -1,6 +1,7 @@
 # DBG - Debug Helpers
 
-This library is basically just a wrapper around [Kint](https://github.com/kint-php/kint) and [PHP-Console](https://github.com/barbushin/php-console) combining
+This library is basically just a wrapper around [Kint](https://github.com/kint-php/kint)
+and [PHP-Console](https://github.com/barbushin/php-console) combining
 them both into a powerful debugging tool.
 
 ## Installation
@@ -32,7 +33,8 @@ detection set the "environmentDetection" to true
    the [referrer control](https://chrome.google.com/webstore/detail/referer-control/hnkcfpcejkafcihlgbojoidoihckciin?hl=en)
    extension for chrome.)
 
-**IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite error prone (especially when you work
+**IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite
+error prone (especially when you work
 with a dynamic IP address). If you want to use this, you have to code that feature for yourself.
 
 ## Configuration
@@ -44,32 +46,48 @@ The configuration is performed using the `Neunerlei\Dbg\Dbg::config()` function.
   none of the functions will do or output
   anything.
 - environmentDetection: (bool) default: TRUE | Disables the environment detection mechanism if set to false.
-    - envVarKey: (string) default: APP_ENV | Determines the name of the environment variable to look for when
-      enabling the debug feature.
-    - envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
-      from the configured environment variable to enable the debugger.
-    - cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or
-      not.
-    - debugReferrer: (string|NULL) default: NULL | If set this will be expected as the referrer to enable the debugger
-      capabilities.
+- envVarKey: (string) default: APP_ENV | Determines the name of the environment variable to look for when
+  enabling the debug feature.
+- envVarValue: (string) default: dev | Used in combination with "envVarKey" and determines which value to expect
+  from the configured environment variable to enable the debugger.
+- cliIsDev: (bool) default: TRUE | Determines if the debugger should always output stuff in a CLI environment or
+  not.
+- debugReferrer: (string|NULL) default: NULL | If set this will be expected as the referrer to enable the debugger
+  capabilities.
 - preHooks: (callable|array) | One or multiple callbacks to run in front of each debugger function (
   dbg,dbge,trace,tracee,...). Useful for extending the
   functionality. Each callback will receive $hookType, $callingFunction and $givenArguments as arguments.
 - postHooks: (callable|array) | Same as "preHooks" but run after the debug output.
-- consolePassword: (string|NULL) default: NULL | If set the phpConsole will require this value as password before printing the console output to the browser.
+- consolePassword: (string|NULL) default: NULL | If set the phpConsole will require this value as password before
+  printing the console output to the browser.
 - logDir: (string|NULL) default: NULL | If set, the logFile() function will dump the logfile to the given director. Make
-  sure it exists and is writable by the
-  webserver!
-- editorFileFormat (string|NULL) default: null | Can be used to create clickable links to be opened in your
-  IDE of choice. Can be either a formatting pattern like "phpstorm://open?file=%f&line=%l",
-  or one of the predefined values: sublime, textmate, emacs, macvim, phpstorm, phpstorm-remotecall, idea, vscode,
-  vscode-insiders, vscode-remote, vscode-insiders-remote, vscodium, atom, nova, netbeans or xdebug
+  sure it exists and is writable by the webserver!
+- logStream: (string) default: php://stdout | If set, the logStream() function will dump the given arguments to the
+  given stream.
+
+### Config files
+
+The library supports the usage of dedicated config files. The files are plain PHP files with the name: `dbg.config.php`
+that are designed to execute either the `\Neunerlei\Dbg\Dbg::hooks()->addListener()` (for hooks)
+or the `\Neunerlei\Dbg\Dbg::config()` function (for configuration). Those files can easily be added to your .gitignore
+file,
+so you can configure your local development environment without affecting the production environment.
+The files are loaded from the directories of the following server variables:
+
+- `$_ENV['DOCUMENT_ROOT']`
+- `$_ENV['DDEV_COMPOSER_ROOT']`
+- `$_ENV['PWD']`
+- `$_ENV['DBG_CONFIG_DIR']` (Loaded from an environment variable)
+
+Pro tip: The `dbg.config.php` can also be stored in a subdirectory (called: `.dbg`) of the above directories,
+to allow easier `.gitignore` handling.
 
 ## Functions
 
 ### dbg()
 
-Takes any number of arguments and prints them to the screen, either formatted for html or for cli, depending on the current context.
+Takes any number of arguments and prints them to the screen, either formatted for html or for cli, depending on the
+current context.
 
 ```php
 dbg("foo");
@@ -89,7 +107,8 @@ Works exactly the same way as dbg() but kills the script exit(0) after dumping t
 
 ### trace()
 
-Prints the current debug backtrace to the screen, either formatted for html or for cli, depending on the current context.
+Prints the current debug backtrace to the screen, either formatted for html or for cli, depending on the current
+context.
 
 ```php
 trace();
@@ -105,9 +124,12 @@ Again, works exactly the same as trace, but kills the script after printing it.
 
 ### logConsole()
 
-This function is mend specifically for in-browser development only. It relies on [PHP-Console](https://github.com/barbushin/php-console) and
-the [chrome php console extension](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef) to render the given values to the
-javascript console without using html script tags or similar. It works also when performing redirects or throwing exceptions, as the data will be transferred
+This function is mend specifically for in-browser development only. It relies
+on [PHP-Console](https://github.com/barbushin/php-console) and
+the [chrome php console extension](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef)
+to render the given values to the
+javascript console without using html script tags or similar. It works also when performing redirects or throwing
+exceptions, as the data will be transferred
 over a http header.
 
 ```php
@@ -120,7 +142,8 @@ This will output something like:
 
 ### logFile()
 
-Receives any number of arguments and will dump them into a plain log file. The logfile will be located (in order of priority):
+Receives any number of arguments and will dump them into a plain log file. The logfile will be located (in order of
+priority):
 
 - $_ENV["_DBG_LOG_DIR"]/dbg_debug_logfile.log if this environment variable contains a writable directory path
 - Dbg::config("logDir") /dbg_debug_logfile.log if the environment variable is empty and the directory is writable
@@ -133,8 +156,10 @@ logFile("foo");
 
 ### logStream()
 
-Receives any number of arguments and dumps them into a configured stream. By default the 'php://stdout' is used as output stream, which is the best solution if
-you work with docker. The output will always be a single line with all line-breaks removed to keep cloud logging apis nice and happy
+Receives any number of arguments and dumps them into a configured stream. By default the 'php://stdout' is used as
+output stream, which is the best solution if
+you work with docker. The output will always be a single line with all line-breaks removed to keep cloud logging apis
+nice and happy
 
 You can change the stream path to match your needs:
 
@@ -143,24 +168,24 @@ You can change the stream path to match your needs:
 
 ### Dbg::isEnabled()
 
-This function returns true if the debug functions are currently operational (including the checks for the environment detection) and will return TRUE if so, or
+This function returns true if the debug functions are currently operational (including the checks for the environment
+detection) and will return TRUE if so, or
 FALSE if not.
 
-### Dbg::config(string $key = "", $value = NULL)
+### Dbg::config()
 
-This function is used to configure the debugger with the options seen in the "Configuration" section. If this function is called without arguments it will
-return the current list of config option. If it is called with a key but without value it will return the current value for the given key.
-
-If you supply both key and value you will set the given config option.
+This function is used to configure the debugger with the options seen in the "Configuration" section.
+The function returns an instance of a configuration object, which can be used to set or get the current configuration.
 
 ```php
  // Disable environment detection
- Neunerlei\Dbg\Dbg::config("environmentDetection", FALSE);
+ Neunerlei\Dbg\Dbg::config()->setEnvironmentDetection(FALSE);
  ```
 
 ## Postcardware
 
-You're free to use this package, but if it makes it to your production environment I highly appreciate you sending me a postcard from your hometown, mentioning
+You're free to use this package, but if it makes it to your production environment I highly appreciate you sending me a
+postcard from your hometown, mentioning
 which of our package(s) you are using.
 
 You can find my address [here](https://www.neunerlei.eu/).

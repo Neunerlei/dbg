@@ -24,53 +24,55 @@ namespace Neunerlei\Dbg\Module;
 
 
 use Neunerlei\Dbg\Dbg;
+use Neunerlei\Dbg\HookType;
 use UnexpectedValueException;
 
 class StreamDumper
 {
     use DumperUtilTrait;
-    
+
     /**
      * Contains the stream to dump to
      *
      * @var resource|null
      */
-    protected static $stream;
-    
+    protected static mixed $stream;
+
     /**
      * The path of the stream that is currently open,
      * used to detect if the streamPath was changed while the stream was already open
      *
      * @var string|null
      */
-    protected static $openStreamPath;
-    
+    protected static string|null $openStreamPath;
+
     /**
      * An error message to catch stream errors
      *
      * @var string|null
      */
-    protected static $errorMessage;
-    
-    public static function dump(string $functionName, array $args): bool
+    protected static string|null $errorMessage;
+
+    public static function dump(array $args): bool
     {
-        if (! Dbg::isEnabled()) {
+        if (!Dbg::isEnabled()) {
             return true;
         }
-        
-        Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
-        
+
+        Dbg::hooks()->trigger(HookType::BEFORE_LOG_STREAM, ...$args);
+
         static::openStream(static::resolveStreamPath());
-        
+
         if (fwrite(static::$stream, static::buildLogLine($args)) === false) {
             return false;
         }
-        
-        Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
-        
+
+
+        Dbg::hooks()->trigger(HookType::AFTER_LOG_STREAM, ...$args);
+
         return true;
     }
-    
+
     /**
      * Resolves the configured log stream path and returns it
      *
@@ -80,20 +82,20 @@ class StreamDumper
     {
         $logStream = getenv('_DBG_LOG_STREAM');
         if (empty($logStream)) {
-            $logStream = Dbg::config('logStream');
+            $logStream = Dbg::config()->getLogStream();
         }
-        
+
         if (is_string($logStream)) {
             return $logStream;
         }
-        
+
         return 'php://stdout';
     }
-    
+
     /**
      * Generates the log line out of the given arguments
      *
-     * @param   array  $args
+     * @param array $args
      *
      * @return string
      */
@@ -105,44 +107,44 @@ class StreamDumper
                 ' ' . static::stringifyArgs($args) .
                 ' | ' . static::getCallee() .
                 ' | ' . static::getRequestSource()
-               ) . PHP_EOL;
+            ) . PHP_EOL;
     }
-    
+
     /**
      * Super simple stringifier that converts the list of arguments into a continuous string to dump to the stream
      *
-     * @param   array  $args
+     * @param array $args
      *
      * @return string
      */
     protected static function stringifyArgs(array $args): string
     {
         $out = [];
-        
+
         foreach ($args as $arg) {
             if (is_string($arg) || is_numeric($arg)) {
                 $out[] = '"' . $arg . '"';
                 continue;
             }
-            
+
             $argString = preg_replace('/\\s*[\\n\\r]\\s*/', '', @json_encode($arg));
             $type = gettype($arg);
             if (is_object($arg)) {
                 $out[] = '(' . $type . ': ' . get_class($arg) . ') ' . $argString;
                 continue;
             }
-            
+
             $out[] = '(' . $type . ') ' . $argString;
         }
-        
+
         return implode(' / ', $out);
     }
-    
+
     /**
      * Opens the stream if not already opened
      * Automatically detects if the streamPath has been changed and reopens the new stream.
      *
-     * @param   string  $streamPath
+     * @param string $streamPath
      *
      * @return void
      */
@@ -152,25 +154,25 @@ class StreamDumper
             if ($streamPath === static::$openStreamPath) {
                 return;
             }
-            
+
             static::closeStream();
         }
-        
+
         static::createDir($streamPath);
         static::$errorMessage = null;
         set_error_handler([static::class, 'customErrorHandler']);
         static::$stream = fopen($streamPath, 'ab');
         restore_error_handler();
-        
-        if (! is_resource(static::$stream)) {
+
+        if (!is_resource(static::$stream)) {
             static::closeStream();
-            
+
             throw new UnexpectedValueException(
                 sprintf(
                     'The stream or file "%s" could not be opened in append mode: ' . static::$errorMessage, $streamPath));
         }
     }
-    
+
     /**
      * Closes the currently open stream
      *
@@ -181,13 +183,13 @@ class StreamDumper
         if (is_resource(static::$stream ?? null)) {
             fclose(static::$stream);
         }
-        
+
         static::$openStreamPath = null;
         static::$stream = null;
     }
-    
+
     /**
-     * @param   string  $streamPath
+     * @param string $streamPath
      *
      * @return null|string
      */
@@ -197,35 +199,35 @@ class StreamDumper
         if ($pos === false) {
             return dirname($streamPath);
         }
-        
-        if (strpos($streamPath, 'file://') === 0) {
+
+        if (str_starts_with($streamPath, 'file://')) {
             return dirname(substr($streamPath, 7));
         }
-        
+
         return null;
     }
-    
+
     /**
      * Makes sure that the stream directory exists and is writable
      *
-     * @param   string  $streamPath
+     * @param string $streamPath
      */
     protected static function createDir(string $streamPath): void
     {
         $dir = static::getDirFromStream($streamPath);
-        if (null !== $dir && ! is_dir($dir)) {
+        if (null !== $dir && !is_dir($dir)) {
             static::$errorMessage = null;
             set_error_handler([static::class, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
-            if (false === $status && ! is_dir($dir)) {
+            if (false === $status && !is_dir($dir)) {
                 throw new UnexpectedValueException(
                     sprintf(
                         'There is no existing directory at "%s" and its not buildable: ' . static::$errorMessage, $dir));
             }
         }
     }
-    
+
     public static function customErrorHandler($code, $msg): void
     {
         static::$errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);

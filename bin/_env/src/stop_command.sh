@@ -1,1 +1,1 @@
-${DOCKER_COMPOSE_EXECUTABLE} stop ${other_args[*]}
+dockerStop ${other_args[*]}

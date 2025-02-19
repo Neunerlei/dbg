@@ -1,9 +1,11 @@
 if ! areComposerDependenciesInstalled ; then
-  run composer install
+  dockerSsh ${DEFAULT_SERVICE_NAME} "composer install"
 fi
 
+ARGS="${other_args[*]}"
+
 if [[ ${args[--coverage]} ]]; then
-  run ssh -c "composer run test:unit:coverage"
+  dockerSsh ${DEFAULT_SERVICE_NAME} "composer run test:unit:coverage $ARGS"
 else
-  run ssh -c "composer run test:unit"
+  dockerSsh ${DEFAULT_SERVICE_NAME} "composer run test:unit $ARGS"
 fi

@@ -1,7 +1,8 @@
 ARGS=${other_args[*]}
 
-if ! [ ${args[--attach]} ]; then
-	ARGS+=" -d"
+# If attach is set, execute dockerUpAttach, otherwise execute dockerUp
+if ! [[ -z ${args[--attach]} ]]; then
+  dockerUpAttach ${ARGS}
+else
+  dockerUp ${ARGS}
 fi
-
-$DOCKER_COMPOSE_EXECUTABLE up $ARGS

@@ -47,11 +47,7 @@ class RequestSource
     }
     
     public function getUri(): ?string {
-        if (isset($_SERVER['REQUEST_URI'])) {
-            return $_SERVER['REQUEST_URI'];
-        }
-        
-        return null;
+        return $_SERVER['REQUEST_URI'] ?? null;
     }
     
     public function __toString(): string

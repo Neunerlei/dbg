@@ -25,35 +25,35 @@ use Neunerlei\Dbg\Module\PhpConsole as PhpConsoleModule;
 use Neunerlei\Dbg\Module\StreamDumper;
 use Neunerlei\Dbg\Module\Tracer;
 
-if (! function_exists('dbg')) {
+if (!function_exists('dbg')) {
     /**
      * Dumps the given arguments to the screen
      *
-     * @param   array  $args
+     * @param array $args
      */
     function dbg(...$args): void
     {
-        Dumper::dump(__FUNCTION__, $args, false);
+        Dumper::dump($args, false);
     }
 }
 
-if (! function_exists('dbge')) {
+if (!function_exists('dbge')) {
     /**
      * Dumps the given arguments to the screen and stops the execution
      *
-     * @param   array  $args
+     * @param array $args
      */
     function dbge(...$args): void
     {
-        Dumper::dump(__FUNCTION__, $args, true);
+        Dumper::dump($args, true);
     }
 }
 
-if (! function_exists('trace')) {
+if (!function_exists('trace')) {
     /**
      * Dumps the debug backtrace to the screen
      *
-     * @param   array  $options  Options for the trace generation
+     * @param array $options Options for the trace generation
      *                           - offset int (0): The offset from the top of the trace that should be ignored
      *                           - length int: By default all steps are show, this option marks the maximum
      *                           number of steps to be shown.
@@ -63,15 +63,15 @@ if (! function_exists('trace')) {
      */
     function trace(array $options = []): void
     {
-        Tracer::trace(__FUNCTION__, func_get_args(), false);
+        Tracer::trace(func_get_args(), false);
     }
 }
 
-if (! function_exists('tracee')) {
+if (!function_exists('tracee')) {
     /**
      * Dumps the debug backtrace to the screen and kills the script
      *
-     * @param   array  $options  Options for the trace generation
+     * @param array $options Options for the trace generation
      *                           - offset int (0): The offset from the top of the trace that should be ignored
      *                           - length int: By default all steps are show, this option marks the maximum
      *                           number of steps to be shown.
@@ -81,11 +81,11 @@ if (! function_exists('tracee')) {
      */
     function tracee(array $options = []): void
     {
-        Tracer::trace(__FUNCTION__, func_get_args(), true);
+        Tracer::trace(func_get_args(), true);
     }
 }
 
-if (! function_exists('logConsole')) {
+if (!function_exists('logConsole')) {
     /**
      * Dumps the given arguments to the javascript console when using the
      * php console Chrome extension https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef
@@ -96,11 +96,11 @@ if (! function_exists('logConsole')) {
      */
     function logConsole(...$args): void
     {
-        PhpConsoleModule::log(__FUNCTION__, $args);
+        PhpConsoleModule::log($args);
     }
 }
 
-if (! function_exists('logFile')) {
+if (!function_exists('logFile')) {
     /**
      * Dumps the given arguments into a logfile.
      *
@@ -110,28 +110,28 @@ if (! function_exists('logFile')) {
      * * /var/www/logs/dbg_debug_logfile.log if the logs directory is writable
      * * /$SYS_TEMP_DIR/dbg_debug_logfile.log
      *
-     * @param   array  $args
+     * @param array $args
      *
      * @return bool Returns true if the log was written, or if the debug mode is disabled. False if the file could not be
      *              written
      */
     function logFile(...$args): bool
     {
-        return FileDumper::dump(__FUNCTION__, $args);
+        return FileDumper::dump($args);
     }
 }
 
-if (! function_exists('logStream')) {
+if (!function_exists('logStream')) {
     /**
      * Dumps the given arguments into a stream (by default the stdout)
      *
-     * @param   array  $args
+     * @param array $args
      *
      * @return bool Returns true if the log was written, or if the debug mode is disabled.
      * False if the stream could not be written
      */
     function logStream(...$args): bool
     {
-        return StreamDumper::dump(__FUNCTION__, $args);
+        return StreamDumper::dump($args);
     }
 }

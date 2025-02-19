@@ -25,47 +25,48 @@ namespace Neunerlei\Dbg\Module;
 
 use Kint\Kint;
 use Neunerlei\Dbg\Dbg;
+use Neunerlei\Dbg\HookType;
 
 class FileDumper
 {
     use DumperUtilTrait;
-    
-    public static function dump(string $functionName, array $args): bool
+
+    public static function dump(array $args): bool
     {
-        if (! Dbg::isEnabled()) {
+        if (!Dbg::isEnabled()) {
             return true;
         }
-        
-        Dbg::runHooks(Dbg::HOOK_TYPE_PRE, $functionName, $args);
-        
+
+        Dbg::hooks()->trigger(HookType::BEFORE_LOG_FILE, ...$args);
+
         $logFileName = static::resolveLogFileName();
         if ($logFileName === null) {
             return false;
         }
-        
+
         $_return = Kint::$return;
         Kint::$return = true;
         $_modeDefault = Kint::$mode_default;
         Kint::$mode_default = Kint::MODE_TEXT;
-        
+
         $content = Kint::dump(...$args);
-        
+
         Kint::$return = $_return;
         Kint::$mode_default = $_modeDefault;
-        
+
         $content .= Dbg::getRequestId() . ' ' . static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
-        
+
         if (is_file($logFileName) && filesize($logFileName) > 0) {
             $content = PHP_EOL . PHP_EOL . PHP_EOL . $content;
         }
-        
+
         file_put_contents($logFileName, $content, FILE_APPEND);
-        
-        Dbg::runHooks(Dbg::HOOK_TYPE_POST, $functionName, $args);
-        
+
+        Dbg::hooks()->trigger(HookType::AFTER_LOG_FILE, ...$args);
+
         return true;
     }
-    
+
     /**
      * Tries to resolve a name for a writable log file location
      *
@@ -75,27 +76,27 @@ class FileDumper
     {
         $logDir = getenv('_DBG_LOG_DIR');
         if (empty($logDir)) {
-            $logDir = Dbg::config('logDir');
+            $logDir = Dbg::config()->getLogDir();
         }
-        
+
         $ds = DIRECTORY_SEPARATOR;
         $baseName = 'dbg_debug_logfile.log';
-        
+
         $variants = [
             '/var/www/logs/' . $baseName,
             sys_get_temp_dir() . $ds . $baseName,
         ];
-        
+
         if (is_string($logDir)) {
             array_unshift($variants, rtrim($logDir, "/\\") . $ds . $baseName);
         }
-        
+
         foreach ($variants as $variant) {
-            if (is_writable($variant) || (! is_file($variant) && is_writable(dirname($variant)))) {
+            if (is_writable($variant) || (!is_file($variant) && is_writable(dirname($variant)))) {
                 return $variant;
             }
         }
-        
+
         return null;
     }
 }
