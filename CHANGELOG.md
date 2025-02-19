@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/Neunerlei/dbg/compare/v2.2.0...v2.3.0) (2025-02-19)
+
+
+### Features
+
+* upgrade to next major version ([265994b](https://github.com/Neunerlei/dbg/commit/265994b90a2075c8a829ef3cd7adcbdb82e088dc))
+
 ## [2.2.0](https://github.com/Neunerlei/dbg/compare/v2.1.0...v2.2.0) (2023-12-26)
 
 

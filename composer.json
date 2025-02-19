@@ -3,7 +3,7 @@
   "description": "PHP debugging suitcase for your daily work",
   "type": "library",
   "license": "Apache-2.0",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "authors": [
     {
       "name": "Martin Neundorfer",
