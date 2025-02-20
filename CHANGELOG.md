@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/Neunerlei/dbg/compare/v3.0.2...v3.0.3) (2025-02-20)
+
+
+### Bug Fixes
+
+* remove unwanted output from config loader ([ece57c2](https://github.com/Neunerlei/dbg/commit/ece57c254eb9c12fae08347f06f6cfd0e5ca2e0d))
+
 ### [3.0.2](https://github.com/Neunerlei/dbg/compare/v3.0.1...v3.0.2) (2025-02-20)
 
 
