@@ -37,7 +37,6 @@ use Kint\Parser\SerializePlugin;
 use Kint\Parser\TimestampPlugin;
 use Kint\Parser\ToStringPlugin;
 use Kint\Renderer\RichRenderer;
-use Neunerlei\Dbg\Plugins\DedupePlugin;
 use Neunerlei\Dbg\Renderer\ExtendedCliRenderer;
 use Neunerlei\Dbg\Renderer\ExtendedTextRenderer;
 use Neunerlei\Dbg\Util\Config;
@@ -84,7 +83,6 @@ class Dbg
 
         Kint::$plugins = [
             BlacklistPlugin::class,
-            DedupePlugin::class,
             DateTimePlugin::class,
             TimestampPlugin::class,
             IteratorPlugin::class,
