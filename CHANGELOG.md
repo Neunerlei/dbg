@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/Neunerlei/dbg/compare/v3.0.1...v3.0.2) (2025-02-20)
+
+
+### Bug Fixes
+
+* ensure correct require file scope ([9d6b04b](https://github.com/Neunerlei/dbg/commit/9d6b04b3fcc717d04eaa1df656c02c19d280f8a6))
+
 ### [3.0.1](https://github.com/Neunerlei/dbg/compare/v3.0.0...v3.0.1) (2025-02-20)
 
 
