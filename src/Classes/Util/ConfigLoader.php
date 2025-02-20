@@ -12,19 +12,30 @@ class ConfigLoader
         $directories = [];
 
         // Load well known keys in the $_SERVER super-globals array as potential directory
-        foreach (['DOCUMENT_ROOT', 'DDEV_COMPOSER_ROOT', 'PWD', 'DBG_CONFIG_DIR'] as $wellKnownServerKey) {
+        foreach (['DDEV_COMPOSER_ROOT', 'PWD', 'DBG_CONFIG_DIR'] as $wellKnownServerKey) {
             if (isset($_SERVER[$wellKnownServerKey])) {
                 $directories[] = $_SERVER[$wellKnownServerKey];
             }
         }
 
+        // Load all parents of the document root
+        if (isset($_SERVER['DOCUMENT_ROOT'])) {
+            $dir = $_SERVER['DOCUMENT_ROOT'];
+            while (is_readable($dir) && $dir !== '/') {
+                $directories[] = $dir;
+                $dir = dirname($dir);
+            }
+        }
+
         foreach ($directories as $dir) {
             $candidates = [
-                $this->makeFilename($dir),
-                $this->makeFilename($this->joinNames($dir, '.dbg')),
+                $this->joinNames($dir, 'dbg.config.php'),
+                $this->joinNames($this->joinNames($dir, '.dbg'), 'dbg.config.php'),
+                $this->joinNames($this->joinNames($dir, '.dbg'), 'config.php'),
             ];
 
             foreach ($candidates as $configFile) {
+                echo 'CHECKING ' . $configFile . '<br>';
                 if (is_readable($configFile)) {
                     $this->loadFile($configFile);
                 }
@@ -35,11 +46,6 @@ class ConfigLoader
     protected function joinNames(string $dir, string $name): string
     {
         return rtrim($dir, '\\/') . '/' . $name;
-    }
-
-    protected function makeFilename(string $dir): string
-    {
-        return $this->joinNames($dir, 'dbg.config.php');
     }
 
     protected function loadFile(string $filename): void

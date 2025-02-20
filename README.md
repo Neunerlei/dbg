@@ -70,17 +70,16 @@ The configuration is performed using the `Neunerlei\Dbg\Dbg::config()` function.
 The library supports the usage of dedicated config files. The files are plain PHP files with the name: `dbg.config.php`
 that are designed to execute either the `\Neunerlei\Dbg\Dbg::hooks()->addListener()` (for hooks)
 or the `\Neunerlei\Dbg\Dbg::config()` function (for configuration). Those files can easily be added to your .gitignore
-file,
-so you can configure your local development environment without affecting the production environment.
+file, so you can configure your local development environment without affecting the production environment.
 The files are loaded from the directories of the following server variables:
 
-- `$_ENV['DOCUMENT_ROOT']`
+- `$_ENV['DOCUMENT_ROOT']` (Including all its parent directories)
 - `$_ENV['DDEV_COMPOSER_ROOT']`
 - `$_ENV['PWD']`
 - `$_ENV['DBG_CONFIG_DIR']` (Loaded from an environment variable)
 
 Pro tip: The `dbg.config.php` can also be stored in a subdirectory (called: `.dbg`) of the above directories,
-to allow easier `.gitignore` handling.
+to allow easier `.gitignore` handling (If stored in the directory, the file can also be called `.dbg/config.php`).
 
 ## Functions
 
