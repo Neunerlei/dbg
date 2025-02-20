@@ -50,7 +50,8 @@ class ConfigLoader
 
     protected function loadFile(string $filename): void
     {
-        $that = new \stdClass();
+        $that = new class {
+        };
         $c = function (string $filename) {
             require_once $filename;
         };
