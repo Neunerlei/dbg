@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/Neunerlei/dbg/compare/v3.0.0...v3.0.1) (2025-02-20)
+
+
+### Bug Fixes
+
+* improve config loader ([9c1bb91](https://github.com/Neunerlei/dbg/commit/9c1bb91857ce84e18fe4dd9ecbaefcac9785e1a5))
+* remove no longer required dedupe plugin ([7cb9d20](https://github.com/Neunerlei/dbg/commit/7cb9d2033460bea2c26b40642bb433ca1ea07d59))
+
 ## [2.3.0](https://github.com/Neunerlei/dbg/compare/v2.2.0...v2.3.0) (2025-02-19)
 
 
