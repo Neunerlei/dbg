@@ -35,7 +35,6 @@ class ConfigLoader
             ];
 
             foreach ($candidates as $configFile) {
-                echo 'CHECKING ' . $configFile . '<br>';
                 if (is_readable($configFile)) {
                     $this->loadFile($configFile);
                 }
