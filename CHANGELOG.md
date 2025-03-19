@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.4](https://github.com/Neunerlei/dbg/compare/v3.0.3...v3.0.4) (2025-03-19)
+
+
+### Bug Fixes
+
+* ensure StreamDumper does not throw exceptions ([2c6381f](https://github.com/Neunerlei/dbg/commit/2c6381fb47ccb078868369ac93b1e6d95de576b7))
+
 ### [3.0.3](https://github.com/Neunerlei/dbg/compare/v3.0.2...v3.0.3) (2025-02-20)
 
 
