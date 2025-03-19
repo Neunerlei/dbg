@@ -36,7 +36,7 @@ class StreamDumper
      *
      * @var resource|null
      */
-    protected static mixed $stream;
+    protected static mixed $stream = null;
 
     /**
      * The path of the stream that is currently open,
@@ -44,14 +44,14 @@ class StreamDumper
      *
      * @var string|null
      */
-    protected static string|null $openStreamPath;
+    protected static string|null $openStreamPath = null;
 
     /**
      * An error message to catch stream errors
      *
      * @var string|null
      */
-    protected static string|null $errorMessage;
+    protected static string|null $errorMessage = null;
 
     public static function dump(array $args): bool
     {
