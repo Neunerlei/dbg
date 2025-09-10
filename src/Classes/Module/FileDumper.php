@@ -30,43 +30,55 @@ use Neunerlei\Dbg\HookType;
 class FileDumper
 {
     use DumperUtilTrait;
-
+    
     public static function dump(array $args): bool
     {
         if (!Dbg::isEnabled()) {
             return true;
         }
-
-        Dbg::hooks()->trigger(HookType::BEFORE_LOG_FILE, ...$args);
-
-        $logFileName = static::resolveLogFileName();
-        if ($logFileName === null) {
-            return false;
-        }
-
+        
         $_return = Kint::$return;
-        Kint::$return = true;
+        $_cliDetection = Kint::$cli_detection;
+        $_modeDefaultCli = Kint::$mode_default_cli;
         $_modeDefault = Kint::$mode_default;
-        Kint::$mode_default = Kint::MODE_TEXT;
-
-        $content = Kint::dump(...$args);
-
-        Kint::$return = $_return;
-        Kint::$mode_default = $_modeDefault;
-
-        $content .= Dbg::getRequestId() . ' ' . static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
-
-        if (is_file($logFileName) && filesize($logFileName) > 0) {
-            $content = PHP_EOL . PHP_EOL . PHP_EOL . $content;
+        try {
+            Dbg::hooks()->trigger(HookType::BEFORE_LOG_FILE, ...$args);
+            
+            Kint::$return = true;
+            Kint::$cli_detection = false;
+            Kint::$mode_default_cli = Kint::MODE_TEXT;
+            Kint::$mode_default = Kint::MODE_TEXT;
+            
+            $logFileName = static::resolveLogFileName();
+            if ($logFileName === null) {
+                return false;
+            }
+            
+            $content = Kint::dump(...$args);
+            
+            Kint::$return = $_return;
+            Kint::$mode_default = $_modeDefault;
+            
+            $content .= Dbg::getRequestId() . ' ' . static::getTimestamp() . ' ' . static::getRequestSource() . PHP_EOL;
+            
+            if (is_file($logFileName) && filesize($logFileName) > 0) {
+                $content = PHP_EOL . PHP_EOL . PHP_EOL . $content;
+            }
+            
+            file_put_contents($logFileName, $content, FILE_APPEND);
+            
+            Dbg::hooks()->trigger(HookType::AFTER_LOG_FILE, ...$args);
+            
+            return true;
+            
+        } finally {
+            Kint::$return = $_return;
+            Kint::$cli_detection = $_cliDetection;
+            Kint::$mode_default_cli = $_modeDefaultCli;
+            Kint::$mode_default = $_modeDefault;
         }
-
-        file_put_contents($logFileName, $content, FILE_APPEND);
-
-        Dbg::hooks()->trigger(HookType::AFTER_LOG_FILE, ...$args);
-
-        return true;
     }
-
+    
     /**
      * Tries to resolve a name for a writable log file location
      *
@@ -78,25 +90,25 @@ class FileDumper
         if (empty($logDir)) {
             $logDir = Dbg::config()->getLogDir();
         }
-
+        
         $ds = DIRECTORY_SEPARATOR;
         $baseName = 'dbg_debug_logfile.log';
-
+        
         $variants = [
             '/var/www/logs/' . $baseName,
             sys_get_temp_dir() . $ds . $baseName,
         ];
-
+        
         if (is_string($logDir)) {
             array_unshift($variants, rtrim($logDir, "/\\") . $ds . $baseName);
         }
-
+        
         foreach ($variants as $variant) {
             if (is_writable($variant) || (!is_file($variant) && is_writable(dirname($variant)))) {
                 return $variant;
             }
         }
-
+        
         return null;
     }
 }
