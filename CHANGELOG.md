@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/Neunerlei/dbg/compare/v3.0.4...v3.1.0) (2025-09-10)
+
+
+### Features
+
+* implement automatic cors headers and better cli detection ([720f227](https://github.com/Neunerlei/dbg/commit/720f2276c98a4de968cb6fa38a229ae04ddfecdb))
+
+
+### Bug Fixes
+
+* **FileDumper:** ensure correct text logging in cli actions ([1404a8b](https://github.com/Neunerlei/dbg/commit/1404a8b51d6a97f30cc70a6cb796da9a969fdc51))
+* **PhpConsole:** do not execute php console logging in a cli command ([eded97d](https://github.com/Neunerlei/dbg/commit/eded97d16c4027e65d856272567aab2cfe08eab0))
+
 ### [3.0.4](https://github.com/Neunerlei/dbg/compare/v3.0.3...v3.0.4) (2025-03-19)
 
 
