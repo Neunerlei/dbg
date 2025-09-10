@@ -38,6 +38,10 @@ class Tracer
             return;
         }
         
+        if ($exit) {
+            Headers::exitHeaders();
+        }
+        
         Dbg::hooks()->trigger(HookType::BEFORE_TRACE, ...$args);
         
         $options = static::prepareOptions($args);
@@ -71,7 +75,6 @@ class Tracer
         Dbg::hooks()->trigger(HookType::AFTER_TRACE, ...$args);
         
         if ($exit) {
-            Headers::exitHeaders();
             exit();
         }
     }

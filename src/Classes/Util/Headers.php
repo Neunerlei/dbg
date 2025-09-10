@@ -11,6 +11,10 @@ class Headers
 {
     public static function exitHeaders(): void
     {
+        if (headers_sent()) {
+            return;
+        }
+        
         self::corsHeaders();
     }
     

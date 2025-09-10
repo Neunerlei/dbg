@@ -40,6 +40,10 @@ class Dumper
             return;
         }
         
+        if ($exit) {
+            Headers::exitHeaders();
+        }
+        
         if (static::$isDumping && !static::$hasDumpedOnce) {
             $oldPreRenderState = RichRenderer::$always_pre_render;
             RichRenderer::$always_pre_render = true;
@@ -61,7 +65,6 @@ class Dumper
         }
         
         if ($exit) {
-            Headers::exitHeaders();
             exit();
         }
     }
