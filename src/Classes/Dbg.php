@@ -50,7 +50,9 @@ class Dbg
     protected static Hooks|null $hooks = null;
     protected static EnvironmentDetection|null $envDetection = null;
     protected static string|null $requestId = null;
-
+    protected static bool $isAjax = false;
+    protected static bool $isCli = false;
+    
     /**
      * Initializes the debugger by applying our configuration to the Kint debugging tool
      */
@@ -59,20 +61,20 @@ class Dbg
         if (static::$config !== null) {
             return;
         }
-
+        
         static::$config = new Config();
         static::$hooks = new Hooks();
         static::$envDetection = new EnvironmentDetection(static::$config);
-
+        
         static::$hooks->trigger(HookType::BEFORE_INIT, static::$config);
-
+        
         Kint::$enabled_mode = true;
         RichRenderer::$folder = false;
         RichRenderer::$access_paths = false;
         Kint::$renderers[Kint::MODE_TEXT] = ExtendedTextRenderer::class;
         Kint::$renderers[Kint::MODE_CLI] = ExtendedCliRenderer::class;
         Kint::$depth_limit = 8;
-
+        
         Kint::$aliases[] = 'dbg';
         Kint::$aliases[] = 'dbge';
         Kint::$aliases[] = 'logconsole';
@@ -80,7 +82,7 @@ class Dbg
         Kint::$aliases[] = 'logstream';
         Kint::$aliases[] = 'trace';
         Kint::$aliases[] = 'tracee';
-
+        
         Kint::$plugins = [
             BlacklistPlugin::class,
             DateTimePlugin::class,
@@ -95,7 +97,7 @@ class Dbg
             ArrayLimitPlugin::class,
             ClosurePlugin::class
         ];
-
+        
         // If we detect either a client that does not accept html, or the request
         // is executed using an "AJAX" request, we will use the text-renderer instead of the rich-renderer
         if (
@@ -104,13 +106,16 @@ class Dbg
                 || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest'
                 || strtolower($_SERVER['X-Requested-With'] ?? '') === 'xmlhttprequest')) {
             Kint::$mode_default = Kint::MODE_TEXT;
+            static::$isAjax = true;
+        } elseif (PHP_SAPI === 'cli' || defined('STDIN')) {
+            static::$isCli = true;
         }
-
+        
         (new ConfigLoader())->load();
-
+        
         static::$hooks->trigger(HookType::AFTER_INIT, static::$config);
     }
-
+    
     /**
      * Used to configure the debugging context.
      * @return Config
@@ -120,7 +125,7 @@ class Dbg
         static::init();
         return static::$config;
     }
-
+    
     /**
      * Used to register custom hooks and listeners
      * @return Hooks
@@ -130,7 +135,7 @@ class Dbg
         static::init();
         return static::$hooks;
     }
-
+    
     /**
      * Returns true if the debugging capabilities are enabled, false if not
      *
@@ -141,7 +146,7 @@ class Dbg
         $config = static::config();
         return $config->isEnabled() && static::$envDetection->isEnabled();
     }
-
+    
     /**
      * Generates/reads a unique request id that will be added to log outputs
      *
@@ -152,11 +157,33 @@ class Dbg
         if (isset(static::$requestId)) {
             return static::$requestId;
         }
-
+        
         if (isset($_SERVER['HTTP_X_REQUEST_ID'])) {
             return static::$requestId = $_SERVER['HTTP_X_REQUEST_ID'];
         }
-
+        
         return static::$requestId = uniqid('request_', true);
+    }
+    
+    /**
+     * Returns true if the current request is executed in a CLI context, false if not
+     *
+     * @return bool
+     */
+    public static function isCli(): bool
+    {
+        static::init();
+        return static::$isCli;
+    }
+    
+    /**
+     * Returns true if the current request is executed as an AJAX request, false if not
+     *
+     * @return bool
+     */
+    public static function isAjax(): bool
+    {
+        static::init();
+        return static::$isAjax;
     }
 }

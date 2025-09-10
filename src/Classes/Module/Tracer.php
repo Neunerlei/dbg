@@ -28,6 +28,7 @@ use Kint\Parser\TracePlugin;
 use Kint\Utils;
 use Neunerlei\Dbg\Dbg;
 use Neunerlei\Dbg\HookType;
+use Neunerlei\Dbg\Util\Headers;
 
 class Tracer
 {
@@ -36,44 +37,45 @@ class Tracer
         if (!Dbg::isEnabled()) {
             return;
         }
-
+        
         Dbg::hooks()->trigger(HookType::BEFORE_TRACE, ...$args);
-
+        
         $options = static::prepareOptions($args);
-
+        
         $trace = array_slice(
             debug_backtrace($options['backtraceOptions']),
             $options['offset']
         );
-
+        
         $trace = static::processTrace($trace, $options['length']);
         $hasTracePlugin = in_array(TracePlugin::class, Kint::$plugins, true);
-
+        
         if (!$hasTracePlugin) {
             Kint::$plugins[] = TracePlugin::class;
         }
-
+        
         $_expanded = Kint::$expanded;
         Kint::$expanded = true;
         $_calledFrom = Kint::$display_called_from;
         Kint::$display_called_from = false;
-
+        
         Kint::dump($trace);
-
+        
         Kint::$expanded = $_expanded;
         Kint::$display_called_from = $_calledFrom;
-
+        
         if (!$hasTracePlugin) {
             array_pop(Kint::$plugins);
         }
-
+        
         Dbg::hooks()->trigger(HookType::AFTER_TRACE, ...$args);
-
+        
         if ($exit) {
+            Headers::exitHeaders();
             exit();
         }
     }
-
+    
     /**
      * Extracts the options from the given arguments and returns them as array
      *
@@ -84,11 +86,11 @@ class Tracer
     protected static function prepareOptions(array $args): array
     {
         $options = is_array($args[0] ?? null) ? $args[0] : [];
-
+        
         $withArguments = is_bool($options['withArguments'] ?? null)
             ? $options['withArguments']
-            : !is_null($options['withArguments'] ?? null) || php_sapi_name() !== 'cli';
-
+            : !is_null($options['withArguments'] ?? null) || Dbg::isCli();
+        
         return [
             'backtraceOptions' => $withArguments ? DEBUG_BACKTRACE_PROVIDE_OBJECT : DEBUG_BACKTRACE_IGNORE_ARGS,
             // + 1 to remove the Tracer::trace from the stack
@@ -96,7 +98,7 @@ class Tracer
             'length' => (int)($options['length'] ?? 0),
         ];
     }
-
+    
     /**
      * Process the trace by resolving the trace frames and by applying the configured max length
      *
@@ -113,7 +115,7 @@ class Tracer
             if (Utils::traceFrameIsListed($frame, Kint::$aliases)) {
                 $_trace = [];
             }
-
+            
             if (count($_trace) >= $stepsToShow) {
                 $_trace[] = [
                     'file' => 'There are ' . (abs($stepsToShow - count($trace))) . ' additional steps hidden by the "length" setting.',
@@ -123,10 +125,10 @@ class Tracer
                 ];
                 break;
             }
-
+            
             $_trace[] = $frame;
         }
-
+        
         return $_trace;
     }
 }

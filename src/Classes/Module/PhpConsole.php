@@ -36,7 +36,7 @@ class PhpConsole
         }
         
         // If cli -> ignore
-        if (PHP_SAPI === 'cli') {
+        if (Dbg::isCli()) {
             return;
         }
         

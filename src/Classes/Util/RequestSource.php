@@ -5,40 +5,44 @@ declare(strict_types=1);
 namespace Neunerlei\Dbg\Util;
 
 
+use Neunerlei\Dbg\Dbg;
+
 class RequestSource
 {
     public function isCli(): bool
     {
-        return PHP_SAPI === 'cli';
+        return Dbg::isCli();
     }
     
-    public function isWebRequest(): bool{
+    public function isWebRequest(): bool
+    {
         return !$this->isCli();
     }
     
     public function getProtocol(): ?string
     {
-        if($this->isCli()){
+        if ($this->isCli()) {
             return null;
         }
         
         if ((isset($_SERVER['HTTPS']) &&
-            ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)) ||
+                ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)) ||
             (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-            $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-            return'https://';
+                $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+            return 'https://';
         }
-       
+        
         return 'http://';
     }
     
-    public function getHost(): ?string {
-        if($this->isCli()){
+    public function getHost(): ?string
+    {
+        if ($this->isCli()) {
             return null;
         }
         
-        foreach (['HTTP_HOST', 'SERVER_NAME'] as $lookupKey){
-            if(isset($_SERVER[$lookupKey])){
+        foreach (['HTTP_HOST', 'SERVER_NAME'] as $lookupKey) {
+            if (isset($_SERVER[$lookupKey])) {
                 return $_SERVER[$lookupKey];
             }
         }
@@ -46,20 +50,21 @@ class RequestSource
         return null;
     }
     
-    public function getUri(): ?string {
+    public function getUri(): ?string
+    {
         return $_SERVER['REQUEST_URI'] ?? null;
     }
     
     public function __toString(): string
     {
-        if($this->isCli()){
+        if ($this->isCli()) {
             return 'Called from CLI';
         }
         
         $host = $this->getHost();
         $uri = $this->getUri();
         
-        if($host || $uri){
+        if ($host || $uri) {
             return 'URL: ' . $host . ($uri ?? '/');
         }
         

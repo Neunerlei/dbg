@@ -6,6 +6,7 @@ namespace Neunerlei\Dbg\Util;
 
 
 use Kint\Kint;
+use Neunerlei\Dbg\Dbg;
 
 class Config implements \JsonSerializable
 {
@@ -18,7 +19,9 @@ class Config implements \JsonSerializable
     protected string|null $consolePassword = null;
     protected string|null $logDir = null;
     protected string|null $logStream = null;
-
+    protected bool|null $dumpCorsHeadersOnExit = null;
+    protected bool $dumpCorsHeadersOnExitForAjax = true;
+    
     /**
      * Returns true if the debugging functionality is enabled, false if not.
      * @return bool
@@ -27,7 +30,7 @@ class Config implements \JsonSerializable
     {
         return $this->enabled;
     }
-
+    
     /**
      * Main switch to enable/disable the debugging functionality. If you set this to
      * false, none of the functions will do or output anything.
@@ -39,7 +42,7 @@ class Config implements \JsonSerializable
     {
         $this->enabled = Kint::$enabled_mode = $enabled;
     }
-
+    
     /**
      * Returns true if the environment detection is enabled, false if not.
      * @return bool
@@ -48,7 +51,7 @@ class Config implements \JsonSerializable
     {
         return $this->environmentDetection;
     }
-
+    
     /**
      * Disables the environment detection mechanism if set to false.
      * Environment detection is used to determine if the current environment is considered a "development" environment.
@@ -61,7 +64,7 @@ class Config implements \JsonSerializable
     {
         $this->environmentDetection = $environmentDetection;
     }
-
+    
     /**
      * Returns the name of the environment variable to look for when enabling the debug feature.
      * @return string
@@ -70,7 +73,7 @@ class Config implements \JsonSerializable
     {
         return $this->envVarKey;
     }
-
+    
     /**
      * Determines the name of the environment variable to look for when
      * enabling the debug feature.
@@ -83,7 +86,7 @@ class Config implements \JsonSerializable
     {
         $this->envVarKey = $envVarKey;
     }
-
+    
     /**
      * Returns the value that is expected from the configured environment variable to enable the debugger.
      * @return string
@@ -92,7 +95,7 @@ class Config implements \JsonSerializable
     {
         return $this->envVarValue;
     }
-
+    
     /**
      * Used in combination with "envVarKey" and determines which value to expect
      * from the configured environment variable to enable the debugger.
@@ -104,7 +107,7 @@ class Config implements \JsonSerializable
     {
         $this->envVarValue = $envVarValue;
     }
-
+    
     /**
      * Returns true if the debugger should always output stuff in a CLI environment or not.
      * @return bool
@@ -113,7 +116,7 @@ class Config implements \JsonSerializable
     {
         return $this->cliIsDev;
     }
-
+    
     /**
      * Determines if the debugger should always output stuff in a CLI environment or not.
      * Default: true
@@ -124,7 +127,7 @@ class Config implements \JsonSerializable
     {
         $this->cliIsDev = $cliIsDev;
     }
-
+    
     /**
      * Returns the referrer that is expected to enable the debugger capabilities.
      * @return string|null
@@ -133,7 +136,7 @@ class Config implements \JsonSerializable
     {
         return $this->debugReferrer;
     }
-
+    
     /**
      * If set this will be expected as the referrer to enable the debugger capabilities.
      * @param string|null $debugReferrer
@@ -143,7 +146,7 @@ class Config implements \JsonSerializable
     {
         $this->debugReferrer = $debugReferrer;
     }
-
+    
     /**
      * Returns the password that is required to access the console output.
      * @return string|null
@@ -152,7 +155,7 @@ class Config implements \JsonSerializable
     {
         return $this->consolePassword;
     }
-
+    
     /**
      * If set the phpConsole will require this value as password before printing the console output to the browser.
      * @param string|null $consolePassword
@@ -162,7 +165,7 @@ class Config implements \JsonSerializable
     {
         $this->consolePassword = $consolePassword;
     }
-
+    
     /**
      * Returns the directory where the log file should be written to.
      * Returns null if no explicit log directory is set. In this case the logger can decide where to write the log file.
@@ -172,7 +175,7 @@ class Config implements \JsonSerializable
     {
         return $this->logDir;
     }
-
+    
     /**
      * If set, the logFile() function will dump the logfile to the given director.
      * Make sure it exists and is writable by the webserver!
@@ -183,7 +186,7 @@ class Config implements \JsonSerializable
     {
         $this->logDir = $logDir;
     }
-
+    
     /**
      * Returns the editor link format that is used to generate clickable links in the debug output.
      * Returns null if no explicit editor link format is set. In this case the logger can decide how to generate the links.
@@ -193,7 +196,7 @@ class Config implements \JsonSerializable
     {
         return $this->logStream;
     }
-
+    
     /**
      * If set, the logStream() function will dump the log to the given stream.
      * Defaults to php://stdout
@@ -204,7 +207,60 @@ class Config implements \JsonSerializable
     {
         $this->logStream = $logStream;
     }
-
+    
+    /**
+     * Returns true if CORS headers should be dumped on script exit, false if not.
+     * This is useful if you want to see the dbge output in a different origin (e.g. when using a frontend framework).
+     * If dumpCorsHeadersOnExitForAjax is true (default) and the current request is an ajax request, this will always return true,
+     * except dumpCorsHeadersOnExit is explicitly set to false.
+     * @return bool
+     */
+    public function doesDumpCorsHeadersOnExit(): bool
+    {
+        if ($this->dumpCorsHeadersOnExit === null && $this->dumpCorsHeadersOnExitForAjax && Dbg::isAjax()) {
+            return true;
+        }
+        
+        return $this->dumpCorsHeadersOnExit ?? false;
+    }
+    
+    /**
+     * If set to true, the CORS headers will be dumped on script exit.
+     * This is useful if you want to see the dbge output in a different origin (e.g. when using a frontend framework).
+     * Setting this to true, will always enable the CORS headers, even for non-ajax requests.
+     * If dumpCorsHeadersOnExitForAjax is true (default) and the current request is an ajax request, this will always return true,
+     * except dumpCorsHeadersOnExit is explicitly set to false.
+     * Default: false
+     * @param bool $dumpCorsHeadersOnExit
+     * @return void
+     */
+    public function setDumpCorsHeadersOnExit(bool $dumpCorsHeadersOnExit): void
+    {
+        $this->dumpCorsHeadersOnExit = $dumpCorsHeadersOnExit;
+    }
+    
+    /**
+     * Returns true if CORS headers should be dumped on script exit for ajax requests, false if not.
+     * Default: true
+     * @return bool
+     */
+    public function doesDumpCorsHeadersOnExitForAjax(): bool
+    {
+        return $this->dumpCorsHeadersOnExitForAjax;
+    }
+    
+    /**
+     * If set to true (default), the CORS headers will be dumped on script exit for ajax requests.
+     * This is useful if you want to see the dbge output in a different origin (e.g. when using a frontend framework).
+     * Default: true
+     * @param bool $dumpCorsHeadersOnExitForAjax
+     * @return void
+     */
+    public function setDumpCorsHeadersOnExitForAjax(bool $dumpCorsHeadersOnExitForAjax): void
+    {
+        $this->dumpCorsHeadersOnExitForAjax = $dumpCorsHeadersOnExitForAjax;
+    }
+    
     public function jsonSerialize(): array
     {
         return [
@@ -217,9 +273,11 @@ class Config implements \JsonSerializable
             'consolePassword' => $this->consolePassword,
             'logDir' => $this->logDir,
             'logStream' => $this->logStream,
+            'dumpCorsHeadersOnExit' => $this->dumpCorsHeadersOnExit,
+            'dumpCorsHeadersOnExitForAjax' => $this->dumpCorsHeadersOnExitForAjax,
         ];
     }
-
+    
     public function importFromArray(array $data): void
     {
         foreach ($data as $key => $value) {
@@ -233,13 +291,15 @@ class Config implements \JsonSerializable
                 'consolePassword' => 'setConsolePassword',
                 'logDir' => 'setLogDir',
                 'logStream' => 'setLogStream',
+                'dumpCorsHeadersOnExit' => 'setDumpCorsHeadersOnExit',
+                'dumpCorsHeadersOnExitForAjax' => 'setDumpCorsHeadersOnExitForAjax',
                 default => null,
             };
-
+            
             if ($setter === null) {
                 continue;
             }
-
+            
             $this->$setter($value);
         }
     }
