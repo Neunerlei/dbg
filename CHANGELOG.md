@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/Neunerlei/dbg/compare/v3.1.0...v3.1.1) (2025-09-10)
+
+
+### Bug Fixes
+
+* send exit headers before dumping output and only if headers are not already sent ([2901a91](https://github.com/Neunerlei/dbg/commit/2901a91edc4e4542d82bbedb365bda8d7566bffc))
+
 ## [3.1.0](https://github.com/Neunerlei/dbg/compare/v3.0.4...v3.1.0) (2025-09-10)
 
 
