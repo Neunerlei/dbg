@@ -29,6 +29,7 @@ use Kint\Parser\BlacklistPlugin;
 use Kint\Parser\ClosurePlugin;
 use Kint\Parser\ColorPlugin;
 use Kint\Parser\DateTimePlugin;
+use Kint\Parser\EnumPlugin;
 use Kint\Parser\FsPathPlugin;
 use Kint\Parser\IteratorPlugin;
 use Kint\Parser\JsonPlugin;
@@ -112,7 +113,8 @@ class Dbg
             MicrotimePlugin::class,
             SerializePlugin::class,
             ArrayLimitPlugin::class,
-            ClosurePlugin::class
+            ClosurePlugin::class,
+            EnumPlugin::class
         ];
         
         static::$hooks->trigger(HookType::AFTER_INIT, static::$config);
