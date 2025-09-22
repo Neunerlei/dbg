@@ -66,6 +66,23 @@ class Dbg
         static::$hooks = new Hooks();
         static::$envDetection = new EnvironmentDetection(static::$config);
         
+        // If we detect either a client that does not accept html, or the request
+        // is executed using an "AJAX" request, we will use the text-renderer instead of the rich-renderer
+        if (
+            isset($_SERVER) &&
+            (stripos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== 0
+                || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest'
+                || strtolower($_SERVER['X-Requested-With'] ?? '') === 'xmlhttprequest')) {
+            Kint::$mode_default = Kint::MODE_TEXT;
+            static::$isAjax = true;
+        }
+        
+        if (PHP_SAPI === 'cli' || defined('STDIN')) {
+            static::$isCli = true;
+        }
+        
+        (new ConfigLoader())->load();
+        
         static::$hooks->trigger(HookType::BEFORE_INIT, static::$config);
         
         Kint::$enabled_mode = true;
@@ -97,21 +114,6 @@ class Dbg
             ArrayLimitPlugin::class,
             ClosurePlugin::class
         ];
-        
-        // If we detect either a client that does not accept html, or the request
-        // is executed using an "AJAX" request, we will use the text-renderer instead of the rich-renderer
-        if (
-            isset($_SERVER) &&
-            (stripos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== 0
-                || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest'
-                || strtolower($_SERVER['X-Requested-With'] ?? '') === 'xmlhttprequest')) {
-            Kint::$mode_default = Kint::MODE_TEXT;
-            static::$isAjax = true;
-        } elseif (PHP_SAPI === 'cli' || defined('STDIN')) {
-            static::$isCli = true;
-        }
-        
-        (new ConfigLoader())->load();
         
         static::$hooks->trigger(HookType::AFTER_INIT, static::$config);
     }
