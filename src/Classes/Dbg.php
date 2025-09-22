@@ -67,18 +67,12 @@ class Dbg
         static::$hooks = new Hooks();
         static::$envDetection = new EnvironmentDetection(static::$config);
         
-        // If we detect either a client that does not accept html, or the request
-        // is executed using an "AJAX" request, we will use the text-renderer instead of the rich-renderer
-        if (
-            isset($_SERVER) &&
-            (stripos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== 0
-                || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest'
-                || strtolower($_SERVER['X-Requested-With'] ?? '') === 'xmlhttprequest')) {
+        if (static::$envDetection->isAjax()) {
             Kint::$mode_default = Kint::MODE_TEXT;
             static::$isAjax = true;
         }
         
-        if (PHP_SAPI === 'cli' || defined('STDIN')) {
+        if (static::$envDetection->isCli()) {
             static::$isCli = true;
         }
         

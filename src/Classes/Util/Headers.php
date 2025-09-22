@@ -14,6 +14,9 @@ class Headers
         if (headers_sent()) {
             return;
         }
+        if (Dbg::isCli()) {
+            return;
+        }
         
         self::corsHeaders();
     }
