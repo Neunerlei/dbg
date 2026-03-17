@@ -74,20 +74,26 @@ class FileDumper
             $logDir = Dbg::config()->getLogDir();
         }
         
-        $ds = DIRECTORY_SEPARATOR;
         $baseName = 'dbg_debug_logfile.log';
         
         $variants = [
+            // symfony
+            '/var/www/html/var/log/' . $baseName,
+            // laravel
+            '/var/www/html/storage/logs/' . $baseName,
+            // legacy support
             '/var/www/logs/' . $baseName,
-            sys_get_temp_dir() . $ds . $baseName,
+            // fallback option
+            sys_get_temp_dir() . '/' . $baseName,
         ];
         
+        // Set the configured directory always first to try
         if (is_string($logDir)) {
-            array_unshift($variants, rtrim($logDir, "/\\") . $ds . $baseName);
+            array_unshift($variants, rtrim($logDir, "/\\") . '/' . $baseName);
         }
         
         foreach ($variants as $variant) {
-            if (is_writable($variant) || (!is_file($variant) && is_writable(dirname($variant)))) {
+            if (is_writable($variant) || (!is_file($variant) && is_dir(dirname($variant)) && is_writable(dirname($variant)))) {
                 return $variant;
             }
         }
