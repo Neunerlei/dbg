@@ -25,17 +25,32 @@ detection set the "environmentDetection" to true
    Configuration" section for further information)
    to false.
 2. You may define a environment variable to determine if the debugging is enabled or not. By default, the script will
-   look for a env variable called "APP_ENV" which requires a value of "dev" to enable the debugging. You may configure
-   the name of the variable, as well as the expected value. (PROJECT_ENV also works for legacy compatibility)
+   look for multiple different values to check if it has to enable the debugging. You may configure
+   the name of the variable, as well as the expected value. (See below for the list of default variables)
 3. By default, CLI commands are considered "save" and will allow execution of the debug methods. (See "cliIsDev" option)
 4. It is possible to only enable the debugging when a specific referrer is transmitted by your browser. To enable this
    take a look at the "debugReferrer" option. (See
    the [referrer control](https://chrome.google.com/webstore/detail/referer-control/hnkcfpcejkafcihlgbojoidoihckciin?hl=en)
    extension for chrome.)
 
-**IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite
-error prone (especially when you work
-with a dynamic IP address). If you want to use this, you have to code that feature for yourself.
+> **IP's** I explicitly left out ip's for determining if the debugger should run or not, as I figure that method as quite
+> error prone (especially when you work with a dynamic IP address). If you want to use this, you have to code that feature for yourself.
+
+### Checked environment variables
+
+To determine the environment we check a set of environment variables.
+If you configured one yourself with `Dbg::config()->setEnvVarKey()` and `Dbg::config()->setEnvVarValue()`, the script will check for the variable you configured AND the following list of built-in variables:
+
+| Variable name    | Description                                                                                                                                                                |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `APP_ENV`        | The most common variable to determine the current environment. If set to "dev", "local" or "development" the debugger will be enabled.                                     |
+| `ENVIRONMENT`    | Can be set to "dev" or "development" to enable the debugger.                                                                                                               |
+| `PHP_PROD_DEBUG` | Can be set to "1" or "true" to enable the debugger, to work out of the box with my [Docker images](https://github.com/Neunerlei/docker-images/blob/main/docs/php-nginx.md) |
+| `PROJECT_ENV`    | **DEPRECATED** Legacy support for older applications. Can be set to "dev" or "development" to enable the debugger.                                                         |
+
+> If ANY of those variables is set to the expected value, the debugger will be enabled. So you can choose the one that fits best for your environment.
+
+> **Pro tip** You can disable the built-in environment variable checks by setting
 
 ## Configuration
 

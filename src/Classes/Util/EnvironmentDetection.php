@@ -49,14 +49,38 @@ class EnvironmentDetection
             return true;
         }
         
-        // Env variable matches expected value? -> Yes
-        $possibleEnvKeys = [$this->config->getEnvVarKey(), 'PROJECT_ENV'];
-        $expectedEnvValue = $this->config->getEnvVarValue();
+        $envPairs = [];
         
-        foreach ($possibleEnvKeys as $envKey) {
-            $env = getenv($envKey);
-            if ($env === $expectedEnvValue
-                || ($env === false && ($_ENV[$envKey] ?? null) === $expectedEnvValue)) {
+        // Default environment variable keys and values to check for, if the built-in detection is not disabled
+        if (!$this->config->isBuiltInEnvVarDetectionDisabled()) {
+            // APP_ENV=dev is the most common convention, so we check for that by default
+            $envPairs['APP_ENV'] = ['development', 'dev', 'local'];
+            
+            // Legacy support for older applications
+            $envPairs['PROJECT_ENV'] = ['development', 'dev'];
+            
+            // Support for my own docker images (https://github.com/Neunerlei/docker-images/blob/main/docs/php-nginx.md)
+            $envPairs['ENVIRONMENT'] = ['development', 'dev'];
+            $envPairs['PHP_PROD_DEBUG'] = ['true', '1', 'yes'];
+        }
+        
+        // Explicitly configured environment variable key and value
+        // Doing this after the defaults, allows the user to override the expected default values, too.
+        $configuredEnvKey = $this->config->getEnvVarKey();
+        $configuredEnvValue = $this->config->getEnvVarValue();
+        if ($configuredEnvKey !== null && !empty($configuredEnvValue)) {
+            $envPairs[$configuredEnvKey] = array_map('strtolower', array_map('trim', explode(',', $configuredEnvValue)));
+        }
+        
+        foreach ($envPairs as $envKey => $values) {
+            $value = getenv($envKey);
+            if ($value === false) {
+                $value = $_ENV[$envKey] ?? null;
+            }
+            if (is_string($value)) {
+                $value = strtolower($value);
+            }
+            if (in_array($value, $values, true)) {
                 return true;
             }
         }

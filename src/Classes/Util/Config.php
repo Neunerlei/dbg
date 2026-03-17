@@ -12,8 +12,9 @@ class Config implements \JsonSerializable
 {
     protected bool $enabled = true;
     protected bool $environmentDetection = true;
-    protected string $envVarKey = 'APP_ENV';
+    protected string|null $envVarKey = null;
     protected string $envVarValue = 'dev';
+    protected bool $disableBuiltInEnvVarDetection = false;
     protected bool $cliIsDev = true;
     protected string|null $debugReferrer = null;
     protected string|null $consolePassword = null;
@@ -67,20 +68,21 @@ class Config implements \JsonSerializable
     
     /**
      * Returns the name of the environment variable to look for when enabling the debug feature.
-     * @return string
+     * @return string|null
      */
-    public function getEnvVarKey(): string
+    public function getEnvVarKey(): ?string
     {
         return $this->envVarKey;
     }
     
     /**
-     * Determines the name of the environment variable to look for when
-     * enabling the debug feature.
-     * Default: PROJECT_ENV
+     * Determines the name of the environment variable to look for when enabling the debug feature.
+     * Note, this is optional, use this if your app/framework has a specific environment variable that indicates the current environment.
+     * The most common ones are automatically detected by the environment detection mechanism, so you usually do not need to set this.
      *
      * @param string $envVarKey
      * @return void
+     * @see setEnvVarValue() to configure which value to expect from the environment variable to enable the debugger. Defaults to "dev".
      */
     public function setEnvVarKey(string $envVarKey): void
     {
@@ -99,6 +101,9 @@ class Config implements \JsonSerializable
     /**
      * Used in combination with "envVarKey" and determines which value to expect
      * from the configured environment variable to enable the debugger.
+     *
+     * Can be a comma separated list of values, e.g. "dev,development,local" to allow multiple values to enable the debugger.
+     *
      * Default: dev
      * @param string $envVarValue
      * @return void
@@ -106,6 +111,31 @@ class Config implements \JsonSerializable
     public function setEnvVarValue(string $envVarValue): void
     {
         $this->envVarValue = $envVarValue;
+    }
+    
+    /**
+     * Returns true if the built-in environment variable detection mechanism should be disabled, false if not.
+     * If true, this means only the explicitly configured environment variable (via {@see setEnvVarKey() and {@see setEnvVarValue()})
+     * will be checked to determine if the debugger should be enabled.
+     *
+     * @return bool
+     */
+    public function isBuiltInEnvVarDetectionDisabled(): bool
+    {
+        return $this->disableBuiltInEnvVarDetection;
+    }
+    
+    /**
+     * If set to true, the built-in environment variable detection mechanism will be disabled.
+     * This means only the explicitly configured environment variable (via {@see setEnvVarKey() and {@see setEnvVarValue()})
+     * will be checked to determine if the debugger should be enabled.
+     * Default: false
+     * @param bool $disableBuiltInEnvVarDetection
+     * @return void
+     */
+    public function setDisableBuiltInEnvVarDetection(bool $disableBuiltInEnvVarDetection): void
+    {
+        $this->disableBuiltInEnvVarDetection = $disableBuiltInEnvVarDetection;
     }
     
     /**
