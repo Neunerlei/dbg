@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/Neunerlei/dbg/compare/v3.1.1...v3.2.0) (2025-09-22)
+
+
+### Features
+
+* add Kint EnumPlugin ([6954896](https://github.com/Neunerlei/dbg/commit/6954896c29b1228531364bfcfae10ae4ca53a498))
+* harden cli and ajax detection ([681d123](https://github.com/Neunerlei/dbg/commit/681d123f57e20b5fddc83c2938096365b9793215))
+* load basic configuration before configuring Kint ([788efc7](https://github.com/Neunerlei/dbg/commit/788efc78e5ab2a1862bd7fa68f3b6adc16b6302d))
+* load config more reliably in cli mode ([6fd1f3a](https://github.com/Neunerlei/dbg/commit/6fd1f3a2dc3c911ff747d70de8ee02aa59c75eaa))
+
 ### [3.1.1](https://github.com/Neunerlei/dbg/compare/v3.1.0...v3.1.1) (2025-09-10)
 
 
