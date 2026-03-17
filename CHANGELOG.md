@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/Neunerlei/dbg/compare/v3.2.0...v3.3.0) (2026-03-17)
+
+
+### Features
+
+* add log support for common framework locations ([614061d](https://github.com/Neunerlei/dbg/commit/614061db9ed25b70765a6d1d57a112c22fba8740))
+* allow more environment variables in env detection ([bd965d7](https://github.com/Neunerlei/dbg/commit/bd965d7b0da75e8438d6d69752240996e0f70029))
+
+
+### Bug Fixes
+
+* fix bin/env docker compose integration ([fbb7bbf](https://github.com/Neunerlei/dbg/commit/fbb7bbf9dc686c562aaaf9b0a3a43b6778e70ea1))
+
 ## [3.2.0](https://github.com/Neunerlei/dbg/compare/v3.1.1...v3.2.0) (2025-09-22)
 
 
